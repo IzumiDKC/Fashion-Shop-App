@@ -8,5 +8,7 @@ data class Product(
     val isHot: Boolean,
     val promotionPrice: Double?,
     val hotStartDate: String?,
-    val hotEndDate: String?
+    val hotEndDate: String?,
+    val brandId: Int,
+    val categoryId: Int
 )
