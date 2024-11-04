@@ -11,15 +11,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import com.example.fashionshopapp.Repository.BrandRepository
+import com.example.fashionshopapp.Repository.CategoryRepository
+import com.example.fashionshopapp.models.Brand
+import com.example.fashionshopapp.models.Category
 import com.example.fashionshopapp.models.Product
 
 @Composable
 fun ProductScreen() {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
+    var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
+    var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
+
     val productRepository = ProductRepository()
-    // Fetch products when the screen is first composed
+    val brandRepository = BrandRepository()
+    val categoryRepository = CategoryRepository()
+
     LaunchedEffect(Unit) {
         products = productRepository.fetchProducts()
+        brands = brandRepository.fetchBrands() // Gọi từ brandRepository
+        categories = categoryRepository.fetchCategories() // Gọi từ categoryRepository
     }
 
     LazyColumn(
@@ -27,13 +38,16 @@ fun ProductScreen() {
         contentPadding = PaddingValues(16.dp)
     ) {
         items(products) { product ->
-            ProductItem(product)
+            ProductItem(product, brands, categories)
         }
     }
 }
 
 @Composable
-fun ProductItem(product: Product) {
+fun ProductItem(product: Product, brands: List<Brand>, categories: List<Category>) {
+    val brand = brands.find { it.id == product.brandId }?.name ?: "Unknown Brand"
+    val category = categories.find { it.id == product.categoryId }?.name ?: "Unknown Category"
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,6 +73,8 @@ fun ProductItem(product: Product) {
             product.promotionPrice?.let {
                 Text(text = "Discount: ${product.promotionPrice}%")
             }
+            Text(text = "Brand: $brand", color = Color.Gray) // Hiển thị brand
+            Text(text = "Category: $category", color = Color.Gray) // Hiển thị category
         }
     }
 }

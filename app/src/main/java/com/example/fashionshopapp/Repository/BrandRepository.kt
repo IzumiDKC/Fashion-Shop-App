@@ -1,6 +1,7 @@
 package com.example.fashionshopapp.Repository
 
 import com.example.fashionshopapp.api.RetrofitInstance
+import com.example.fashionshopapp.models.Brand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
