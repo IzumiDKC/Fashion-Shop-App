@@ -51,7 +51,9 @@ android {
 
 dependencies {
 
-    // Jetpack Compose
+    // Accompanist Pager
+    implementation ("com.google.accompanist:accompanist-pager:0.28.0")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")
     implementation ("androidx.compose.ui:ui:1.4.0")
     implementation ("androidx.compose.material:material:1.4.0")
     implementation ("androidx.compose.ui:ui-tooling-preview:1.4.0")
