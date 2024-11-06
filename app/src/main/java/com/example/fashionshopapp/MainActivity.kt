@@ -1,6 +1,7 @@
 package com.example.fashionshopapp
 
 import BannerCarousel
+import CategoryGrid
 import ProductScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,9 +25,10 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 Surface {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        BannerCarousel() // Đặt banner ở đầu trang
-                        Spacer(modifier = Modifier.height(16.dp)) // Khoảng trống giữa banner và nội dung
-                        ProductScreen() // Danh sách sản phẩm bên dưới
+                        BannerCarousel()
+                        CategoryGrid()
+                        Spacer(modifier = Modifier.height(16.dp)) // Khoảng trống  banner & nội dung
+                        ProductScreen()
                     }
                 }
             }
