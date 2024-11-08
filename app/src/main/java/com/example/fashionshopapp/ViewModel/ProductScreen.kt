@@ -3,6 +3,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,12 +23,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.pager.HorizontalPager
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.material.TextField
 
 @Composable
 fun ProductScreen() {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
+
+    var searchText by remember { mutableStateOf("") } // Lưu từ khóa tìm kiếm
 
     val productRepository = ProductRepository()
     val brandRepository = BrandRepository()
@@ -39,14 +46,31 @@ fun ProductScreen() {
         categories = categoryRepository.fetchCategories()
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         // BannerCarousel
+        TextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            label = { Text("Tìm kiếm sản phẩm") },
+            textStyle = androidx.compose.ui.text.TextStyle(
+                fontFamily = FontFamily.Default,  //  font tiếng Việt
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Start
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        )
+
+        val filteredProducts = products.filter {
+            it.name.contains(searchText, ignoreCase = true)
+        }
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp)
+            modifier = Modifier.fillMaxSize()
         ) {
-            items(products) { product ->
+            items(filteredProducts) { product ->
                 ProductItem(product, brands, categories)
             }
         }
@@ -79,12 +103,12 @@ fun ProductItem(product: Product, brands: List<Brand>, categories: List<Category
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
-            Text(text = "Price: ${product.price} VND", color = Color.Gray)
+            Text(text = "Giá: ${product.price} VND", color = Color.Gray)
             product.promotionPrice?.let {
-                Text(text = "Discount: ${product.promotionPrice}%")
+                Text(text = "Khuyến mãi: ${product.promotionPrice}%", color = Color.Red)
             }
-            Text(text = "Brand: $brand", color = Color.Gray)
-            Text(text = "Category: $category", color = Color.Gray)
+            Text(text = "Hãng: $brand", color = Color.Black)
+            Text(text = "Loại: $category", color = Color.Black)
         }
     }
 }
