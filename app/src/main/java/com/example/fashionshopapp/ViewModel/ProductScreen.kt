@@ -27,13 +27,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material.TextField
+import com.example.fashionshopapp.utils.AppBackground
 
 @Composable
 fun ProductScreen() {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
-
     var searchText by remember { mutableStateOf("") } // Lưu từ khóa tìm kiếm
 
     val productRepository = ProductRepository()
@@ -45,23 +45,11 @@ fun ProductScreen() {
         brands = brandRepository.fetchBrands()
         categories = categoryRepository.fetchCategories()
     }
+    AppBackground {
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         // BannerCarousel
-        TextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text("Tìm kiếm sản phẩm") },
-            textStyle = androidx.compose.ui.text.TextStyle(
-                fontFamily = FontFamily.Default,  //  font tiếng Việt
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Start
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        )
+        SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
 
         val filteredProducts = products.filter {
             it.name.contains(searchText, ignoreCase = true)
@@ -72,6 +60,7 @@ fun ProductScreen() {
         ) {
             items(filteredProducts) { product ->
                 ProductItem(product, brands, categories)
+                }
             }
         }
     }
