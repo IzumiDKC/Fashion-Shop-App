@@ -27,13 +27,14 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.fashionshopapp.screens.ProfileScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             FashionShopAppTheme {
-                MainScreen()  // Sử dụng MainScreen làm màn hình chính
+                MainScreen()
             }
         }
     }
@@ -93,13 +94,29 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
+    val isLoggedIn = remember { mutableStateOf(false) } // Quản lý trạng thái đăng nhập
+
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) { HomeScreen() }
         composable(Screen.Test1.route) { Test1Screen() }
         composable(Screen.Test2.route) { Test2Screen() }
-        composable(Screen.Profile.route) { ProfileScreen() }
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                isLoggedIn = isLoggedIn.value,
+                onLoginClick = {
+                    // Logic đăng nhập hoặc cập nhật trạng thái isLoggedIn
+                    isLoggedIn.value = true
+                },
+                onLogoutClick = {
+                    // Logic đăng xuất hoặc cập nhật trạng thái isLoggedIn
+                    isLoggedIn.value = false
+                }
+            )
+        }
     }
 }
+
+
 
 @Composable
 fun HomeScreen() {

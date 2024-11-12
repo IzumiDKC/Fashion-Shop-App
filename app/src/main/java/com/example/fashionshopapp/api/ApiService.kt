@@ -4,7 +4,10 @@ import com.example.fashionshopapp.models.Brand
 import com.example.fashionshopapp.models.Category
 import com.example.fashionshopapp.models.Product
 import retrofit2.Call
+import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface ApiService {
     @GET("api/products")
@@ -15,4 +18,5 @@ interface ApiService {
 
     @GET("api/categories")
     fun getCategories(): Call<List<Category>>
+
 }

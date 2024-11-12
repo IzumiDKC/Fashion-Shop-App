@@ -92,10 +92,16 @@ fun ProductItem(product: Product, brands: List<Brand>, categories: List<Category
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
-            Text(text = "Giá: ${product.price} VND", color = Color.Gray)
-            product.promotionPrice?.let {
-                Text(text = "Khuyến mãi: ${product.promotionPrice}%", color = Color.Red)
+            Text(
+                text = "Giá: ${product.price}00 VND",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+            )
+            product.promotionPrice?.takeIf { it > 0 }?.let { promotionPrice ->
+                Text(text = "Khuyến mãi: $promotionPrice%", color = Color.Red)
             }
+
+
             Text(text = "Hãng: $brand", color = Color.Black)
             Text(text = "Loại: $category", color = Color.Black)
         }
