@@ -15,17 +15,15 @@ import com.example.fashionshopapp.R
 @Composable
 fun AppBackground(content: @Composable () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
-        // Đặt hình nền chiếm toàn bộ màn hình
         Image(
-            painter = rememberImagePainter(R.drawable.background), // Thay `your_background_image` bằng tên ảnh của bạn
+            painter = rememberImagePainter(R.drawable.background),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
-                .graphicsLayer { alpha = 0.8f }, // Điều chỉnh độ trong suốt (opacity) nếu cần
-            contentScale = ContentScale.Crop // Giúp hình nền bao phủ toàn bộ màn hình
+                .graphicsLayer { alpha = 0.8f }, // độ trong suốt
+            contentScale = ContentScale.Crop // Giúp hình nền bao phủ toàn bộ
         )
 
-        // Nội dung của màn hình
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
