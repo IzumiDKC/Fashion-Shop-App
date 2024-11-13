@@ -19,4 +19,6 @@ interface ApiService {
     @GET("api/categories")
     fun getCategories(): Call<List<Category>>
 
+    @POST("api/auth/login")
+    fun login(@Body request: LoginRequest): Call<LoginResponse>
 }

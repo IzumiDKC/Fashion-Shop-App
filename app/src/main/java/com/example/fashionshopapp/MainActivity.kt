@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.fashionshopapp.screens.ProfileScreen
+import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,23 +96,14 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 @Composable
 fun NavigationGraph(navController: NavHostController) {
     val isLoggedIn = remember { mutableStateOf(false) } // Quản lý trạng thái đăng nhập
+    val profileViewModel = ProfileViewModel() // Khởi tạo ViewModel
 
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) { HomeScreen() }
         composable(Screen.Test1.route) { Test1Screen() }
         composable(Screen.Test2.route) { Test2Screen() }
         composable(Screen.Profile.route) {
-            ProfileScreen(
-                isLoggedIn = isLoggedIn.value,
-                onLoginClick = {
-                    // Logic đăng nhập hoặc cập nhật trạng thái isLoggedIn
-                    isLoggedIn.value = true
-                },
-                onLogoutClick = {
-                    // Logic đăng xuất hoặc cập nhật trạng thái isLoggedIn
-                    isLoggedIn.value = false
-                }
-            )
+            ProfileScreen(viewModel = profileViewModel)  // Chỉ gọi ProfileScreen một lần
         }
     }
 }
@@ -150,9 +142,6 @@ fun Test2Screen() {
 
 @Composable
 fun ProfileScreen() {
-    AppBackground {
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            Text("Đây là màn hình Hồ Sơ")
-        }
-    }
+    val viewModel = ProfileViewModel()
+    ProfileScreen(viewModel = viewModel)
 }
