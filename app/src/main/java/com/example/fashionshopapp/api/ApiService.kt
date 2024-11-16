@@ -19,4 +19,10 @@ interface ApiService {
     @GET("api/categories")
     fun getCategories(): Call<List<Category>>
 
+    @POST("api/auth/login")
+    fun login(@Body request: LoginRequest): Call<LoginResponse>
+
+    @POST("api/auth/register")
+    fun register(@Body registerRequest: RegisterRequest): Call<Void>
+
 }
