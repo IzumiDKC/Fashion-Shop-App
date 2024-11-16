@@ -1,5 +1,6 @@
 package com.example.fashionshopapp.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,11 +11,10 @@ import com.example.fashionshopapp.viewmodel.ProfileViewModel
 @Composable
 fun RegisterScreen(viewModel: ProfileViewModel, onBackToLogin: () -> Unit) {
     var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var registerError by remember { mutableStateOf(false) }
-    var successMessage by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var errorMessages by remember { mutableStateOf<List<String>?>(null) }
 
     Column(
         modifier = Modifier
@@ -31,7 +31,7 @@ fun RegisterScreen(viewModel: ProfileViewModel, onBackToLogin: () -> Unit) {
         TextField(
             value = fullName,
             onValueChange = { fullName = it },
-            label = { Text("Họ và tên") },
+            label = { Text("Họ tên") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -51,12 +51,12 @@ fun RegisterScreen(viewModel: ProfileViewModel, onBackToLogin: () -> Unit) {
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             onClick = {
-                viewModel.register(username, password, fullName, email) { success ->
-                    if (success) {
-                        successMessage = "Đăng ký thành công! Vui lòng quay lại đăng nhập."
-                        registerError = false
+                viewModel.register(username, fullName, email, password) { success, errors ->
+                    if (!success) {
+                        errorMessages = errors
                     } else {
-                        registerError = true
+                        // Chuyển về màn hình đăng nhập
+                        onBackToLogin()
                     }
                 }
             },
@@ -64,15 +64,26 @@ fun RegisterScreen(viewModel: ProfileViewModel, onBackToLogin: () -> Unit) {
         ) {
             Text("Đăng ký")
         }
-        if (registerError) {
-            Text("Đăng ký không thành công", color = MaterialTheme.colorScheme.error)
-        }
-        if (successMessage.isNotEmpty()) {
-            Text(successMessage, color = MaterialTheme.colorScheme.primary)
+
+        // Hiển thị lỗi nếu có
+        errorMessages?.let { errors ->
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = onBackToLogin) {
-                Text("Quay lại đăng nhập")
+            Column {
+                errors.forEach { error ->
+                    Text(
+                        text = error,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Đã có tài khoản? Đăng nhập tại đây",
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable { onBackToLogin() }
+        )
     }
 }
