@@ -32,10 +32,16 @@ class ProfileViewModel : ViewModel() {
         isLoggedIn = false
         // Xóa token hoặc các thông tin đăng nhập lưu trữ (nếu cần)
     }
-    fun register(username: String, password: String, fullName: String, email: String, onRegisterResult: (Boolean) -> Unit) {
+    fun register(
+        username: String,
+        fullName: String,
+        email: String,
+        password: String,
+        onRegisterResult: (Boolean, List<String>?) -> Unit
+    ) {
         viewModelScope.launch {
-            repository.register(username, password, fullName, email) { success ->
-                onRegisterResult(success)
+            repository.register(username, password, fullName, email) { success, errors ->
+                onRegisterResult(success, errors)
             }
         }
     }
