@@ -6,21 +6,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel) {
+fun ProfileScreen(viewModel: ProfileViewModel, navController: NavController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginError by remember { mutableStateOf(false) }
 
     if (viewModel.isLoggedIn) {
-        // Hiển thị nút Đăng xuất khi đã đăng nhập
         Button(onClick = { viewModel.logout() }) {
             Text("Đăng xuất")
         }
     } else {
-        // Giao diện đăng nhập
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -58,9 +57,10 @@ fun ProfileScreen(viewModel: ProfileViewModel) {
                 "Nếu chưa có tài khoản, đăng ký tại đây",
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable {
-                    // Xử lý điều hướng sang màn hình đăng ký
+                    navController.navigate("register")
                 }
             )
         }
     }
 }
+
