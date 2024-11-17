@@ -1,8 +1,9 @@
+package com.example.fashionshopapp.Repository
+
 import com.example.fashionshopapp.api.RetrofitInstance
 import com.example.fashionshopapp.models.Product
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.await
 
 class ProductRepository {
     suspend fun fetchProducts(): List<Product> {
