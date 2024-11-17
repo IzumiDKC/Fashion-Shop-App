@@ -24,11 +24,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.ProfileScreen
 import com.example.fashionshopapp.screens.RegisterScreen
+import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 class MainActivity : ComponentActivity() {
@@ -58,7 +61,7 @@ fun BottomNavigationBar(navController: NavHostController) {
     val items = listOf(
         Screen.Home,
         Screen.Test1,
-        Screen.Test2,
+        Screen.Cart,
         Screen.Profile
     )
 
@@ -90,18 +93,19 @@ fun BottomNavigationBar(navController: NavHostController) {
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Home : Screen("home", "Trang Chủ", Icons.Default.Home)
     object Test1 : Screen("test1", "Test 1", Icons.Default.Star)
-    object Test2 : Screen("test2", "Test 2", Icons.Default.Favorite)
+    object Cart : Screen("cart", "Giỏ Hàng", Icons.Default.ShoppingCart)
     object Profile : Screen("profile", "Hồ Sơ", Icons.Default.Person)
 }
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
     val profileViewModel = ProfileViewModel()
+    val cartViewModel = CartViewModel()
 
     NavHost(navController, startDestination = Screen.Home.route) {
-        composable(Screen.Home.route) { HomeScreen() }
+        composable(Screen.Home.route) { HomeScreen(cartViewModel) }
         composable(Screen.Test1.route) { Test1Screen() }
-        composable(Screen.Test2.route) { Test2Screen() }
+        composable(Screen.Cart.route) { CartScreen(viewModel = cartViewModel) }
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
         }
@@ -118,16 +122,17 @@ fun NavigationGraph(navController: NavHostController) {
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(cartViewModel: CartViewModel) {
     AppBackground {
         Column(modifier = Modifier.fillMaxSize()) {
             BannerCarousel()
             CategoryGrid()
             Spacer(modifier = Modifier.height(16.dp))
-            ProductScreen()
+            ProductScreen(cartViewModel)
         }
     }
 }
+
 
 @Composable
 fun Test1Screen() {
@@ -138,13 +143,6 @@ fun Test1Screen() {
     }
 }
 
-@Composable
-fun Test2Screen() {
-    AppBackground {
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            Text("Đây là màn hình Test 2")
-        }
-    }
-}
+
 
 

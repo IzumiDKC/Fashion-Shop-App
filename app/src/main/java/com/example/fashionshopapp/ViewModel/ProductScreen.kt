@@ -2,8 +2,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +15,7 @@ import coil.compose.rememberImagePainter
 import com.example.fashionshopapp.R
 import com.example.fashionshopapp.Repository.BrandRepository
 import com.example.fashionshopapp.Repository.CategoryRepository
+import com.example.fashionshopapp.Repository.ProductRepository
 import com.example.fashionshopapp.models.Brand
 import com.example.fashionshopapp.models.Category
 import com.example.fashionshopapp.models.Product
@@ -23,18 +24,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.pager.HorizontalPager
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.material.TextField
 import com.example.fashionshopapp.utils.AppBackground
+import com.example.fashionshopapp.viewmodel.CartViewModel
 
 @Composable
-fun ProductScreen() {
+fun ProductScreen(cartViewModel: CartViewModel) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
-    var searchText by remember { mutableStateOf("") } // Lưu từ khóa tìm kiếm
+    var searchText by remember { mutableStateOf("") }
 
     val productRepository = ProductRepository()
     val brandRepository = BrandRepository()
@@ -45,29 +43,42 @@ fun ProductScreen() {
         brands = brandRepository.fetchBrands()
         categories = categoryRepository.fetchCategories()
     }
+
     AppBackground {
-
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        // BannerCarousel
-        SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
 
-        val filteredProducts = products.filter {
-            it.name.contains(searchText, ignoreCase = true)
-        }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(filteredProducts) { product ->
-                ProductItem(product, brands, categories)
+            // Thanh tìm kiếm
+            SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
+
+            val filteredProducts = products.filter {
+                it.name.contains(searchText, ignoreCase = true)
+            }
+
+            // Danh sách sản phẩm
+            if (filteredProducts.isEmpty()) {
+                Text(text = "Không có sản phẩm nào.", color = Color.Gray)
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(filteredProducts) { product ->
+                        ProductItem(product, brands, categories, cartViewModel)
+                    }
                 }
             }
         }
     }
 }
 
+
+
+
 @Composable
-fun ProductItem(product: Product, brands: List<Brand>, categories: List<Category>) {
+fun ProductItem(
+    product: Product,
+    brands: List<Brand>,
+    categories: List<Category>,
+    cartViewModel: CartViewModel
+) {
     val brand = brands.find { it.id == product.brandId }?.name ?: "Unknown Brand"
     val category = categories.find { it.id == product.categoryId }?.name ?: "Unknown Category"
 
@@ -85,25 +96,39 @@ fun ProductItem(product: Product, brands: List<Brand>, categories: List<Category
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = product.name,
-                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
             Text(
                 text = "Giá: ${product.price}00 VND",
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
+                color = Color.Black
             )
             product.promotionPrice?.takeIf { it > 0 }?.let { promotionPrice ->
                 Text(text = "Khuyến mãi: $promotionPrice%", color = Color.Red)
             }
-
-
             Text(text = "Hãng: $brand", color = Color.Black)
             Text(text = "Loại: $category", color = Color.Black)
+
+            Row {
+                Button(
+                    onClick = { cartViewModel.addProductToCart(product) },
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    Text(text = "Thêm vào giỏ")
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Button(
+                    onClick = { /* Xử lý mua ngay sau */ },
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    Text(text = "Mua ngay")
+                }
+            }
         }
     }
 }
