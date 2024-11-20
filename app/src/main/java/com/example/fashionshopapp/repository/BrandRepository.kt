@@ -1,15 +1,15 @@
-package com.example.fashionshopapp.Repository
+package com.example.fashionshopapp.repository
 
 import com.example.fashionshopapp.api.RetrofitInstance
-import com.example.fashionshopapp.models.Category
+import com.example.fashionshopapp.models.Brand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class CategoryRepository {
-    suspend fun fetchCategories(): List<Category> {
+class BrandRepository {
+    suspend fun fetchBrands(): List<Brand> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = RetrofitInstance.api.getCategories().execute()
+                val response = RetrofitInstance.api.getBrands().execute()
                 response.body() ?: emptyList()
             } catch (e: Exception) {
                 emptyList()

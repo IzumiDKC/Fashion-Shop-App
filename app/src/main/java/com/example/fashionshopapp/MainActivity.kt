@@ -21,13 +21,15 @@ import android.annotation.SuppressLint
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fashionshopapp.screens.CartScreen
+import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.screens.ProfileScreen
 import com.example.fashionshopapp.screens.RegisterScreen
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
@@ -102,7 +104,7 @@ fun NavigationGraph(navController: NavHostController) {
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) { HomeScreen() }
         composable(Screen.Test1.route) { Test1Screen() }
-        composable(Screen.Cart.route) { Test2Screen() }
+        composable(Screen.Cart.route) { CartScreen() }
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
         }
@@ -119,16 +121,22 @@ fun NavigationGraph(navController: NavHostController) {
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(cartViewModel: CartViewModel = viewModel()) {
+
     AppBackground {
         Column(modifier = Modifier.fillMaxSize()) {
             BannerCarousel()
             CategoryGrid()
             Spacer(modifier = Modifier.height(16.dp))
-            ProductScreen()
+            ProductScreen(onAddToCart = { product -> cartViewModel.addToCart(product) })
         }
     }
 }
+
+
+
+
+
 
 @Composable
 fun Test1Screen() {
@@ -139,13 +147,5 @@ fun Test1Screen() {
     }
 }
 
-@Composable
-fun Test2Screen() {
-    AppBackground {
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            Text("Đây là màn hình Test 2")
-        }
-    }
-}
 
 
