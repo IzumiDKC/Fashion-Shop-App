@@ -1,4 +1,5 @@
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,6 +31,7 @@ import com.example.fashionshopapp.models.Category
 import com.example.fashionshopapp.repository.BrandRepository
 import com.example.fashionshopapp.repository.CategoryRepository
 import com.example.fashionshopapp.utils.AppBackground
+import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.viewmodel.ProductViewModel
 
 @Composable
@@ -38,7 +40,9 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
     var searchText by remember { mutableStateOf("") }
+    var successMessage by remember { mutableStateOf<String?>(null) } // Thông báo trạng thái
 
+    // Mock data
     val productRepository = ProductRepository()
     val brandRepository = BrandRepository()
     val categoryRepository = CategoryRepository()
@@ -50,26 +54,61 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
     }
 
     AppBackground {
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-            SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
 
-            val filteredProducts = products.filter {
-                it.name.contains(searchText, ignoreCase = true)
+                val filteredProducts = products.filter {
+                    it.name.contains(searchText, ignoreCase = true)
+                }
+
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(filteredProducts) { product ->
+                        ProductItem(
+                            product = product,
+                            brands = brands,
+                            categories = categories,
+                            onAddToCart = {
+                                onAddToCart(product)
+                                successMessage = "Đã thêm ${product.name} vào giỏ hàng!"
+                            }
+                        )
+                    }
+                }
             }
 
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(filteredProducts) { product ->
-                    ProductItem(
-                        product = product,
-                        brands = brands,
-                        categories = categories,
-                        onAddToCart = onAddToCart
+            // Hiển thị thông báo nếu có
+            if (successMessage != null) {
+                LaunchedEffect(successMessage) {
+                    kotlinx.coroutines.delay(2000) // Tự động ẩn thông báo sau 2 giây
+                    successMessage = null
+                }
+
+                // UI hiển thị thông báo
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Text(
+                        text = successMessage ?: "",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .background(Color(0xFF4CAF50)) // Màu nền thông báo
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
             }
         }
     }
 }
+
+
+
+
 
 
 
@@ -102,19 +141,15 @@ fun ProductItem(
             Text(text = product.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
             Text(text = "Giá: ${product.price}00 VND", color = Color.Black, fontWeight = FontWeight.Bold)
 
-            product.promotionPrice?.takeIf { it > 0 }?.let { promotionPrice ->
-                Text(text = "Khuyến mãi: $promotionPrice%", color = Color.Red)
-            }
-
-            Text(text = "Hãng: $brand", color = Color.Black)
-            Text(text = "Loại: $category", color = Color.Black)
-
-            Button(onClick = { onAddToCart(product) }) {
+            Button(onClick = {
+                onAddToCart(product) // Gọi callback thêm sản phẩm vào giỏ
+            }) {
                 Text(text = "Thêm vào giỏ")
             }
         }
     }
 }
+
 
 
 

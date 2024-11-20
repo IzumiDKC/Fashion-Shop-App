@@ -1,37 +1,41 @@
 package com.example.fashionshopapp.viewmodel
 
-import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.fashionshopapp.models.Cart
+import androidx.lifecycle.viewModelScope
 import com.example.fashionshopapp.models.CartItem
 import com.example.fashionshopapp.models.Product
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class CartViewModel : ViewModel() {
-    var cart = mutableStateOf(Cart())
+    private val _cartItems = mutableStateListOf<CartItem>()
+    val cartItems: List<CartItem> get() = _cartItems
 
     fun addToCart(product: Product) {
-        val existingItem = cart.value.items.find { it.product.id == product.id }
+        val existingItem = _cartItems.find { it.product.id == product.id }
+
         if (existingItem != null) {
             existingItem.quantity += 1
         } else {
-            cart.value.items.add(CartItem(product))
+            _cartItems.add(CartItem(product))
         }
-        cart.value = cart.value.copy(items = cart.value.items)
-        Log.d("CartViewModel", "Giỏ hàng: ${cart.value.items.map { it.product.name }}")
-    }
-
-
-    fun updateQuantity(product: Product, quantity: Int) {
-        val cartItem = cart.value.items.find { it.product.id == product.id }
-        cartItem?.quantity = quantity
     }
 
     fun removeFromCart(product: Product) {
-        cart.value.items.removeAll { it.product.id == product.id }
+        _cartItems.removeAll { it.product.id == product.id }
+    }
+
+    fun updateQuantity(product: Product, quantity: Int) {
+        val item = _cartItems.find { it.product.id == product.id }
+        item?.let {
+            if (quantity > 0) it.quantity = quantity else removeFromCart(product)
+        }
+    }
+
+    fun clearCart() {
+        _cartItems.clear()
     }
 }
-
-
-
-

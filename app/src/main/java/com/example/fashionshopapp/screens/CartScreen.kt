@@ -1,17 +1,21 @@
 package com.example.fashionshopapp.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.fashionshopapp.models.CartItem
@@ -19,60 +23,79 @@ import com.example.fashionshopapp.viewmodel.CartViewModel
 
 @Composable
 fun CartScreen(cartViewModel: CartViewModel = viewModel()) {
-    // Quan sát giỏ hàng từ CartViewModel
-    val cart = cartViewModel.cart.value
-    Log.d("CartScreen", "Giỏ hàng: ${cart.items.map { it.product.name }}")
+    val cartItems = cartViewModel.cartItems
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Giỏ hàng", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(16.dp))
+        Text("Giỏ Hàng", style = MaterialTheme.typography.h5)
 
-        if (cart.items.isEmpty()) {
-            Text("Giỏ hàng trống")
+        if (cartItems.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Giỏ hàng trống", color = Color.Gray)
+            }
         } else {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(cart.items) { cartItem ->
-                    CartItemView(cartItem, cartViewModel)
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(cartItems) { cartItem ->
+                    CartItemRow(
+                        cartItem = cartItem,
+                        onQuantityChange = { quantity ->
+                            cartViewModel.updateQuantity(cartItem.product, quantity)
+                        },
+                        onRemove = { cartViewModel.removeFromCart(cartItem.product) }
+                    )
                 }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val totalPrice = cartItems.sumOf { it.product.price * it.quantity }
+            Text("Tổng cộng: $totalPrice VND", style = MaterialTheme.typography.h6)
+
+            Button(
+                onClick = { /* Xử lý thanh toán */ },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Thanh toán")
             }
         }
     }
 }
 
-
-
-
 @Composable
-fun CartItemView(cartItem: CartItem, cartViewModel: CartViewModel) {
-    val product = cartItem.product
-    Row(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+fun CartItemRow(
+    cartItem: CartItem,
+    onQuantityChange: (Int) -> Unit,
+    onRemove: () -> Unit
+) {
+    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
         Image(
-            painter = rememberImagePainter(product.imageUrl),
+            painter = rememberImagePainter(cartItem.product.imageUrl),
             contentDescription = null,
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(64.dp)
         )
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        Column {
-            Text(text = product.name, fontWeight = FontWeight.Bold)
-            Text(text = "Giá: ${product.price} VND")
-            Text(text = "Số lượng: ${cartItem.quantity}")
+        Column(modifier = Modifier.weight(1f)) {
+            Text(cartItem.product.name, style = MaterialTheme.typography.subtitle1)
+            Text("Giá: ${cartItem.product.price} VND")
+        }
 
-            Row {
-                Button(onClick = { cartViewModel.updateQuantity(product, cartItem.quantity - 1) }) {
-                    Text("-")
-                }
-                Button(onClick = { cartViewModel.updateQuantity(product, cartItem.quantity + 1) }) {
-                    Text("+")
-                }
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = { onQuantityChange(cartItem.quantity - 1) }) {
+                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Giảm số lượng")
             }
 
-            Button(onClick = { cartViewModel.removeFromCart(product) }) {
-                Text("Xóa")
+            Text(cartItem.quantity.toString())
+
+            IconButton(onClick = { onQuantityChange(cartItem.quantity + 1) }) {
+                Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Tăng số lượng")
             }
+        }
+
+        IconButton(onClick = onRemove) {
+            Icon(Icons.Default.Delete, contentDescription = "Xóa sản phẩm")
         }
     }
 }
-
-

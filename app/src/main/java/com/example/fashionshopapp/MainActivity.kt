@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -100,11 +101,12 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 @Composable
 fun NavigationGraph(navController: NavHostController) {
     val profileViewModel = ProfileViewModel()
+    val cartViewModel = viewModel<CartViewModel>()
 
     NavHost(navController, startDestination = Screen.Home.route) {
-        composable(Screen.Home.route) { HomeScreen() }
+        composable(Screen.Home.route) { HomeScreen(cartViewModel) }
         composable(Screen.Test1.route) { Test1Screen() }
-        composable(Screen.Cart.route) { CartScreen() }
+        composable(Screen.Cart.route) { CartScreen(cartViewModel) }
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
         }
@@ -129,9 +131,11 @@ fun HomeScreen(cartViewModel: CartViewModel = viewModel()) {
             CategoryGrid()
             Spacer(modifier = Modifier.height(16.dp))
             ProductScreen(onAddToCart = { product -> cartViewModel.addToCart(product) })
+
         }
     }
 }
+
 
 
 
