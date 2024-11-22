@@ -5,12 +5,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
@@ -21,18 +24,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.pager.HorizontalPager
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.material.TextField
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fashionshopapp.models.Brand
 import com.example.fashionshopapp.models.Category
 import com.example.fashionshopapp.repository.BrandRepository
 import com.example.fashionshopapp.repository.CategoryRepository
 import com.example.fashionshopapp.utils.AppBackground
-import com.example.fashionshopapp.viewmodel.CartViewModel
-import com.example.fashionshopapp.viewmodel.ProductViewModel
 
 @Composable
 fun ProductScreen(onAddToCart: (Product) -> Unit) {
@@ -40,9 +36,8 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
     var searchText by remember { mutableStateOf("") }
-    var successMessage by remember { mutableStateOf<String?>(null) } // Thông báo trạng thái
+    var successMessage by remember { mutableStateOf<String?>(null) }
 
-    // Mock data
     val productRepository = ProductRepository()
     val brandRepository = BrandRepository()
     val categoryRepository = CategoryRepository()
@@ -77,14 +72,12 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
                 }
             }
 
-            // Hiển thị thông báo nếu có
             if (successMessage != null) {
                 LaunchedEffect(successMessage) {
                     kotlinx.coroutines.delay(2000) // Tự động ẩn thông báo sau 2 giây
                     successMessage = null
                 }
 
-                // UI hiển thị thông báo
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -139,10 +132,41 @@ fun ProductItem(
 
         Column {
             Text(text = product.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-            Text(text = "Giá: ${product.price}00 VND", color = Color.Black, fontWeight = FontWeight.Bold)
+         //   Text(text = "Danh mục: $category", color = Color.Black)
+            Text(text = "Thương hiệu: $brand", color = Color.Black)
+            if (product.promotionPrice != null && product.promotionPrice > 0) {
+                Text(
+                    text = "Giá: ${product.price}00 VND",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.LineThrough // Gạch ngang
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Hiển thị giá khuyến mãi và phần khuyến mãi màu đỏ
+                Text(
+                    text = buildAnnotatedString {
+                        append("Giá: ${product.finalPrice}00 VND (")
+                        withStyle(style = SpanStyle(color = Color.Red)) {
+                            append("KM: ${product.promotionPrice}%")
+                        }
+                        append(")")
+                    },
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
+            } else {
+                Text(
+                    text = "Giá: ${product.price}00 VND",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
 
             Button(onClick = {
-                onAddToCart(product) // Gọi callback thêm sản phẩm vào giỏ
+                onAddToCart(product)
             }) {
                 Text(text = "Thêm vào giỏ")
             }

@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-
+import java.text.DecimalFormat
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,9 +47,12 @@ fun CartScreen(cartViewModel: CartViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            val totalPrice = cartItems.sumOf { it.product.price * it.quantity }
-            Text("Tổng cộng: $totalPrice VND", style = MaterialTheme.typography.h6)
-
+            val totalPrice = cartItems.sumOf { it.product.finalPrice * it.quantity }
+            val decimalFormat = DecimalFormat("#")
+            Text(
+                text = "Tổng cộng: ${decimalFormat.format(totalPrice)}.000 VND",
+                style = MaterialTheme.typography.h6
+            )
             Button(
                 onClick = { /* Xử lý thanh toán */ },
                 modifier = Modifier.fillMaxWidth()
@@ -77,8 +80,9 @@ fun CartItemRow(
 
         Column(modifier = Modifier.weight(1f)) {
             Text(cartItem.product.name, style = MaterialTheme.typography.subtitle1)
-            Text("Giá: ${cartItem.product.price} VND")
+            Text("Giá: ${String.format("%.0f", cartItem.product.finalPrice)}.000 VND")
         }
+
 
         Spacer(modifier = Modifier.width(16.dp))
 

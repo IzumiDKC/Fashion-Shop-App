@@ -11,4 +11,14 @@ data class Product(
     val hotEndDate: String?,
     val brandId: Int,
     val categoryId: Int
-)
+) {
+    val finalPrice: Double
+        get() {
+            return if (promotionPrice != null && promotionPrice > 0) {
+                price - (price * (promotionPrice / 100))
+            } else {
+                price
+            }
+        }
+}
+
