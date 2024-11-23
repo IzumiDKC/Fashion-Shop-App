@@ -113,6 +113,7 @@ Chỉnh sửa logic giảm giá để có thể nhận trong giỏ hàng, bỏ c
 
 Cập nhật format cho price (.3f). Bỏ các đối tượng không cần thiết 
 
+Cập nhật chức năng checkout từ Cart. get giá trị đơn hàng từ Car
 
 
 
