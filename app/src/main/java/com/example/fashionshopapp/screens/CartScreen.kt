@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -24,13 +23,11 @@ import com.example.fashionshopapp.viewmodel.CartViewModel
 @Composable
 fun CartScreen(cartViewModel: CartViewModel = viewModel()) {
     val cartItems = cartViewModel.cartItems
-
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Giỏ Hàng", style = MaterialTheme.typography.h5)
-
         if (cartItems.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Giỏ hàng trống", color = Color.Gray)
+                Text("Giỏ hàng trống", color = Color.Black)
             }
         } else {
             LazyColumn(modifier = Modifier.weight(1f)) {
@@ -44,13 +41,11 @@ fun CartScreen(cartViewModel: CartViewModel = viewModel()) {
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
-
             val totalPrice = cartItems.sumOf { it.product.finalPrice * it.quantity }
-            val decimalFormat = DecimalFormat("#")
+         //   val decimalFormat = DecimalFormat("#")
             Text(
-                text = "Tổng cộng: ${decimalFormat.format(totalPrice)}.000 VND",
+                text = "Tổng cộng: ${String.format("%.3f", totalPrice)} VND",
                 style = MaterialTheme.typography.h6
             )
             Button(
@@ -75,29 +70,21 @@ fun CartItemRow(
             contentDescription = null,
             modifier = Modifier.size(64.dp)
         )
-
         Spacer(modifier = Modifier.width(16.dp))
-
         Column(modifier = Modifier.weight(1f)) {
             Text(cartItem.product.name, style = MaterialTheme.typography.subtitle1)
-            Text("Giá: ${String.format("%.0f", cartItem.product.finalPrice)}.000 VND")
+            Text("Giá: ${String.format("%.3f", cartItem.product.finalPrice)} VND")
         }
-
-
         Spacer(modifier = Modifier.width(16.dp))
-
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { onQuantityChange(cartItem.quantity - 1) }) {
                 Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Giảm số lượng")
             }
-
             Text(cartItem.quantity.toString())
-
             IconButton(onClick = { onQuantityChange(cartItem.quantity + 1) }) {
                 Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Tăng số lượng")
             }
         }
-
         IconButton(onClick = onRemove) {
             Icon(Icons.Default.Delete, contentDescription = "Xóa sản phẩm")
         }

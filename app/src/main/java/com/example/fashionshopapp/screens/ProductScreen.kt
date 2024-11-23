@@ -132,24 +132,23 @@ fun ProductItem(
 
         Column {
             Text(text = product.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-         //   Text(text = "Danh mục: $category", color = Color.Black)
             Text(text = "Thương hiệu: $brand", color = Color.Black)
+
             if (product.promotionPrice != null && product.promotionPrice > 0) {
                 Text(
-                    text = "Giá: ${product.price}00 VND",
+                    text = "Giá: ${String.format("%.3f", product.price)} VND",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
-                    textDecoration = TextDecoration.LineThrough // Gạch ngang
+                    textDecoration = TextDecoration.LineThrough // Gạch
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
-
-                // Hiển thị giá khuyến mãi và phần khuyến mãi màu đỏ
+                // Giá khuyến mãi
                 Text(
                     text = buildAnnotatedString {
-                        append("Giá: ${product.finalPrice}00 VND (")
+                        append("Giá: ${String.format("%.3f", product.finalPrice)} VND (")
                         withStyle(style = SpanStyle(color = Color.Red)) {
-                            append("KM: ${product.promotionPrice}%")
+                            append("KM: ${String.format("%.3f", product.promotionPrice)}%")
                         }
                         append(")")
                     },
@@ -157,15 +156,14 @@ fun ProductItem(
                     fontWeight = FontWeight.Bold
                 )
             } else {
+                // ko khuyến mãi
                 Text(
-                    text = "Giá: ${product.price}00 VND",
+                    text = "Giá: ${String.format("%.3f", product.price)} VND",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold
                 )
             }
-
-
-            Button(onClick = {
+        Button(onClick = {
                 onAddToCart(product)
             }) {
                 Text(text = "Thêm vào giỏ")
