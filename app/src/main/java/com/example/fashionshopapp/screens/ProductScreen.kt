@@ -141,14 +141,13 @@ fun ProductItem(
                     fontWeight = FontWeight.Bold,
                     textDecoration = TextDecoration.LineThrough // Gạch
                 )
-
                 Spacer(modifier = Modifier.height(4.dp))
                 // Giá khuyến mãi
                 Text(
                     text = buildAnnotatedString {
-                        append("Giá: ${String.format("%.3f", product.finalPrice)} VND (")
+                        append("Sale: ${String.format("%.3f", product.finalPrice)} VND (")
                         withStyle(style = SpanStyle(color = Color.Red)) {
-                            append("KM: ${String.format("%.3f", product.promotionPrice)}%")
+                            append("KM: ${String.format("%.0f", product.promotionPrice)}%")
                         }
                         append(")")
                     },

@@ -16,12 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.fashionshopapp.models.CartItem
 import com.example.fashionshopapp.viewmodel.CartViewModel
 
 @Composable
-fun CartScreen(cartViewModel: CartViewModel = viewModel()) {
+fun CartScreen(
+    navController: NavController,
+    cartViewModel: CartViewModel = viewModel()
+) {
     val cartItems = cartViewModel.cartItems
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Giỏ Hàng", style = MaterialTheme.typography.h5)
@@ -41,22 +45,31 @@ fun CartScreen(cartViewModel: CartViewModel = viewModel()) {
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+
+            // Hiển thị giá tiền tổng
             val totalPrice = cartItems.sumOf { it.product.finalPrice * it.quantity }
-         //   val decimalFormat = DecimalFormat("#")
             Text(
                 text = "Tổng cộng: ${String.format("%.3f", totalPrice)} VND",
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.padding(top = 16.dp)
             )
-            Button(
-                onClick = { /* Xử lý thanh toán */ },
-                modifier = Modifier.fillMaxWidth()
+
+            // Dời nút thanh toán ra giữa bên phải
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 50.dp),
+                contentAlignment = Alignment.CenterEnd// Căn chỉnh nút về bên phải
             ) {
-                Text("Thanh toán")
+                Button(
+                    onClick = { navController.navigate("checkout/${totalPrice}") }
+                ) {
+                    Text("Thanh toán")
+                }
             }
         }
     }
 }
+
+
 
 @Composable
 fun CartItemRow(

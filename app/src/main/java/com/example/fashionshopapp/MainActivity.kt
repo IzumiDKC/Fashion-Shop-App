@@ -29,7 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.example.fashionshopapp.screens.CartScreen
+import com.example.fashionshopapp.screens.CheckoutScreen
 import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.screens.ProfileScreen
 import com.example.fashionshopapp.screens.RegisterScreen
@@ -106,7 +109,7 @@ fun NavigationGraph(navController: NavHostController) {
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) { HomeScreen(cartViewModel) }
         composable(Screen.Test1.route) { Test1Screen() }
-        composable(Screen.Cart.route) { CartScreen(cartViewModel) }
+        composable(Screen.Cart.route) { CartScreen( navController, cartViewModel) }
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
         }
@@ -116,6 +119,22 @@ fun NavigationGraph(navController: NavHostController) {
                 onBackToLogin = { navController.navigate(Screen.Profile.route) }
             )
         }
+        composable(
+            route = "checkout/{totalPrice}",
+            arguments = listOf(navArgument("totalPrice") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toDoubleOrNull() ?: 0.0
+            CheckoutScreen(
+                totalPrice = totalPrice,
+                onConfirmPayment = { paymentMethod ->
+                    // Xử lý logic thanh toán
+                    println("Phương thức thanh toán: $paymentMethod")
+                    navController.popBackStack(Screen.Home.route, false) // Điều hướng về Trang Chủ
+                },
+                onBack = { navController.popBackStack() } // Quay lại giỏ hàng
+            )
+        }
+
     }
 }
 
