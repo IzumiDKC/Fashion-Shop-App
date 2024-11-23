@@ -109,6 +109,10 @@ Add bug log vào issue (3)
 
 Chỉnh sửa logic giảm giá để có thể nhận trong giỏ hàng, bỏ các thuộc tính dư ra từ giỏ hàng .0f để dễ nhận diện
 
+## Update 23/11/2024
+
+Cập nhật format cho price (.3f). Bỏ các đối tượng không cần thiết 
+
 
 
 
