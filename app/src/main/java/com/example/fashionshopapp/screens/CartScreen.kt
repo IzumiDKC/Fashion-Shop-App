@@ -46,7 +46,6 @@ fun CartScreen(
                 }
             }
 
-            // Hiển thị giá tiền tổng
             val totalPrice = cartItems.sumOf { it.product.finalPrice * it.quantity }
             Text(
                 text = "Tổng cộng: ${String.format("%.3f", totalPrice)} VND",
@@ -54,10 +53,9 @@ fun CartScreen(
                 modifier = Modifier.padding(top = 16.dp)
             )
 
-            // Dời nút thanh toán ra giữa bên phải
             Box(
                 modifier = Modifier.fillMaxWidth().padding(bottom = 50.dp),
-                contentAlignment = Alignment.CenterEnd// Căn chỉnh nút về bên phải
+                contentAlignment = Alignment.CenterEnd
             ) {
                 Button(
                     onClick = { navController.navigate("checkout/${totalPrice}") }
