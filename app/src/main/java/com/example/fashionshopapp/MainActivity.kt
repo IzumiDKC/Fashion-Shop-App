@@ -33,6 +33,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.CheckoutScreen
+import com.example.fashionshopapp.screens.LoginScreen
 import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.screens.ProfileScreen
 import com.example.fashionshopapp.screens.RegisterScreen
@@ -113,12 +114,13 @@ fun NavigationGraph(navController: NavHostController) {
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
         }
-        composable("register") {
-            RegisterScreen(
-                viewModel = profileViewModel,
-                onBackToLogin = { navController.navigate(Screen.Profile.route) }
-            )
+        composable("login") {
+            LoginScreen(viewModel = profileViewModel, navController = navController)
         }
+        composable("register") {
+            RegisterScreen(viewModel = profileViewModel, navController = navController)
+        }
+
         composable(
             route = "checkout/{totalPrice}",
             arguments = listOf(navArgument("totalPrice") { type = NavType.StringType })

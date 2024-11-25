@@ -6,10 +6,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 @Composable
-fun RegisterScreen(viewModel: ProfileViewModel, onBackToLogin: () -> Unit) {
+fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
     var username by remember { mutableStateOf("") }
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -55,8 +56,7 @@ fun RegisterScreen(viewModel: ProfileViewModel, onBackToLogin: () -> Unit) {
                     if (!success) {
                         errorMessages = errors
                     } else {
-                        // Chuyển về màn hình đăng nhập
-                        onBackToLogin()
+                        navController.navigate("login") { popUpTo("login") { inclusive = true } }
                     }
                 }
             },
@@ -65,25 +65,19 @@ fun RegisterScreen(viewModel: ProfileViewModel, onBackToLogin: () -> Unit) {
             Text("Đăng ký")
         }
 
-        // Hiển thị lỗi nếu có
         errorMessages?.let { errors ->
             Spacer(modifier = Modifier.height(8.dp))
             Column {
                 errors.forEach { error ->
-                    Text(
-                        text = error,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    Text(text = error, color = MaterialTheme.colorScheme.error)
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Đã có tài khoản? Đăng nhập tại đây",
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable { onBackToLogin() }
+            modifier = Modifier.clickable { navController.navigate("login") }
         )
     }
 }
