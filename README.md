@@ -115,5 +115,9 @@ Cập nhật format cho price (.3f). Bỏ các đối tượng không cần thi�
 
 Cập nhật chức năng checkout từ Cart. get giá trị đơn hàng từ Car
 
+## Update 2511/2024
 
+Tách 3 giao diện Auth ra để quản lí
+
+Design trang Đăng ký
 
