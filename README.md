@@ -115,9 +115,14 @@ Cập nhật format cho price (.3f). Bỏ các đối tượng không cần thi�
 
 Cập nhật chức năng checkout từ Cart. get giá trị đơn hàng từ Car
 
-## Update 2511/2024
+## Update 25/11/2024
 
 Tách 3 giao diện Auth ra để quản lí
 
 Design trang Đăng ký
+
+Cấu hình OKHttpClient? - Thời gian phản hồi vẫn quá lâu
+
+Logic yêu cầu thanh toán khi đã đăng nhập (11:29)
+
 
