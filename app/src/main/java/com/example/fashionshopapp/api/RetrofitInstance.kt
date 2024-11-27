@@ -8,13 +8,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
-    private const val BASE_URL = "https://f643-2402-800-6319-60fd-91e3-f473-8233-539e.ngrok-free.app/"
+    private const val BASE_URL = "https://bb61-2402-800-6319-60fd-ada6-cc61-d2a9-d23f.ngrok-free.app/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.NONE
     }
 
-    // Cấu hình OkHttpClient
     private val client = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .addInterceptor { chain ->
@@ -26,9 +25,9 @@ object RetrofitInstance {
 
             response
         }
-        .connectTimeout(30, TimeUnit.SECONDS) // Timeout kết nối
-        .readTimeout(30, TimeUnit.SECONDS)    // Timeout đọc
-        .writeTimeout(30, TimeUnit.SECONDS)   // Timeout ghi
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 
     // Khởi tạo Retrofit instance
@@ -40,4 +39,6 @@ object RetrofitInstance {
             .build()
             .create(ApiService::class.java)
     }
+
 }
+

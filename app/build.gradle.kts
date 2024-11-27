@@ -52,6 +52,9 @@ android {
 dependencies {
 
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
+
 
 
     // Thêm ViewModel và LiveData
@@ -85,6 +88,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.test.android)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

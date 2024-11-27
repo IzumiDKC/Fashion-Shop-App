@@ -14,7 +14,7 @@ fun provideOkHttpClient(context: Context): OkHttpClient {
         .addInterceptor { chain ->
             val request = if (isNetworkAvailable(context)) {
                 chain.request().newBuilder()
-                    .header("Cache-Control", "public, max-age=60") // Cache 1 phút khi có mạng
+                    .header("Cache-Control", "public, max-age=60")
                     .build()
             } else {
                 chain.request().newBuilder()

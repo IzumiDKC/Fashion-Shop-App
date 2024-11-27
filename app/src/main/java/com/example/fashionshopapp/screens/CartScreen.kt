@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import java.text.DecimalFormat
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +35,14 @@ fun CartScreen(
     profileViewModel: ProfileViewModel = viewModel()
 ) {
     val cartItems = cartViewModel.cartItems
-    var showLoginDialog by remember { mutableStateOf(false) }  // Trạng thái hiển thị dialog
+    val isLoggedIn by remember { mutableStateOf(profileViewModel.isLoggedIn) } // Theo dõi trạng thái đăng nhập
+    var showLoginDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isLoggedIn) {
+        if (!isLoggedIn) {
+            showLoginDialog = true
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Giỏ Hàng", style = MaterialTheme.typography.h5)
@@ -68,10 +76,10 @@ fun CartScreen(
             ) {
                 Button(
                     onClick = {
-                        if (profileViewModel.isLoggedIn) {
+                        if (isLoggedIn) {
                             navController.navigate("checkout/${totalPrice}")
                         } else {
-                            showLoginDialog = true // Hiển thị dialog nếu chưa đăng nhập
+                            showLoginDialog = true
                         }
                     }
                 ) {
@@ -81,7 +89,6 @@ fun CartScreen(
         }
     }
 
-    // AlertDialog khi chưa đăng nhập
     if (showLoginDialog) {
         AlertDialog(
             onDismissRequest = { showLoginDialog = false },
@@ -100,21 +107,13 @@ fun CartScreen(
                 }
             },
             dismissButton = {
-                Button(
-                    onClick = {
-                        showLoginDialog = false // Đóng dialog và quay lại giỏ hàng
-                    }
-                ) {
+                Button(onClick = { showLoginDialog = false }) {
                     Text("Trở về")
                 }
             }
         )
     }
 }
-
-
-
-
 
 
 
