@@ -123,6 +123,15 @@ Design trang Đăng ký
 
 Cấu hình OKHttpClient? - Thời gian phản hồi vẫn quá lâu
 
+## Update 26/11/2024
+
+Cấu hình [Open Weather](https://openweathermap.org/) nhưng lấy dữ liệu trả về bị sai, mặc định là [Mountain View](https://api.openweathermap.org/data/2.5/weather?lat=37.4219983&lon=-122.084&appid=0960e4a5c0a7f890a664fbd6a4e4ed70&units=metric) dù đã fix hơn 6 tiếng
+=> Không được pull vào nhánh
+
+## Update 27/11/2024
+
+Tiếp tục fix nhưng không thành công => chuyển sang dùng http của ip-api để kiểm tra vị trí
+
 Logic yêu cầu thanh toán khi đã đăng nhập (11:29)
 
 
