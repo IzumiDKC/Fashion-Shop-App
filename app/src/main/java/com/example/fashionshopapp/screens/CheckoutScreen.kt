@@ -73,7 +73,6 @@ fun CheckoutScreen(
         }
     }
 
-    // Dialog xác nhận cho từng phương thức thanh toán
     selectedPaymentMethod?.let { method ->
         AlertDialog(
             onDismissRequest = { selectedPaymentMethod = null },

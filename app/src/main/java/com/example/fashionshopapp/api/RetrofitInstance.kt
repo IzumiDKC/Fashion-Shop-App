@@ -30,7 +30,6 @@ object RetrofitInstance {
         .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    // Khởi tạo Retrofit instance
     val api: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

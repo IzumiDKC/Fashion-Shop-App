@@ -20,8 +20,8 @@ fun AppBackground(content: @Composable () -> Unit) {
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
-                .graphicsLayer { alpha = 0.8f }, // độ trong suốt
-            contentScale = ContentScale.Crop // Giúp hình nền bao phủ toàn bộ
+                .graphicsLayer { alpha = 0.8f },
+            contentScale = ContentScale.Crop
         )
 
         Box(

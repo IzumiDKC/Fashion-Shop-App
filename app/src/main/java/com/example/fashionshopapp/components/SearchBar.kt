@@ -16,7 +16,7 @@ fun SearchBar(searchText: String, onSearchTextChange: (String) -> Unit) {
     TextField(
         value = searchText,
         onValueChange = { onSearchTextChange(it) },
-        label = { Text("Tìm kiếm sản phẩm") },
+        label = { Text("Tìm tên quần áo") },
         textStyle = androidx.compose.ui.text.TextStyle(
             fontFamily = FontFamily.Default,
             fontWeight = FontWeight.Normal,

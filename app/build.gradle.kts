@@ -51,17 +51,15 @@ android {
 
 dependencies {
 
+    // gps
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
 
-
-
-    // Thêm ViewModel và LiveData
+    // ViewModel và LiveData
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
     implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
-
     // Accompanist Pager
     implementation ("com.google.accompanist:accompanist-pager:0.28.0")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")

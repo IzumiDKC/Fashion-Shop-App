@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.fashionshopapp.utils.AppBackground
 import com.example.fashionshopapp.viewmodel.WeatherViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel // Đảm bảo import đúng
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {

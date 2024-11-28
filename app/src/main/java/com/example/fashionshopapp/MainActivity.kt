@@ -17,6 +17,7 @@ import com.example.fashionshopapp.utils.AppBackground
 import com.example.fashionshopapp.utils.BannerCarousel
 import CategoryGrid
 import ProductScreen
+import ProfileViewModel
 import android.annotation.SuppressLint
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -38,7 +39,6 @@ import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.screens.ProfileScreen
 import com.example.fashionshopapp.screens.RegisterScreen
 import com.example.fashionshopapp.screens.WeatherScreen
-import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,8 +72,8 @@ fun BottomNavigationBar(navController: NavHostController) {
     )
 
     BottomNavigation(
-        backgroundColor = Color(0xFFFDEBEC),  // Màu nền của thanh công cụ dưới
-        contentColor = Color(0xFFFF7973)  // Màu chữ và icon khi mục được chọn
+        backgroundColor = Color(0xFFFDEBEC),
+        contentColor = Color(0xFFFF7973)
     ) {
         items.forEach { screen ->
             BottomNavigationItem(
@@ -87,8 +87,8 @@ fun BottomNavigationBar(navController: NavHostController) {
                         restoreState = true
                     }
                 },
-                unselectedContentColor = Color(0xFFFF7973),  // Màu chữ khi chưa được chọn
-                selectedContentColor = Color(0xFFFF7973)  // Màu chữ khi được chọn
+                unselectedContentColor = Color(0xFFFF7973),
+                selectedContentColor = Color(0xFFFF7973)
             )
         }
     }
@@ -105,7 +105,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
-    val profileViewModel = ProfileViewModel()
+    val profileViewModel: ProfileViewModel = viewModel()
     val cartViewModel = viewModel<CartViewModel>()
 
     NavHost(navController, startDestination = Screen.Home.route) {
@@ -130,11 +130,10 @@ fun NavigationGraph(navController: NavHostController) {
             CheckoutScreen(
                 totalPrice = totalPrice,
                 onConfirmPayment = { paymentMethod ->
-                    // Xử lý logic thanh toán
                     println("Phương thức thanh toán: $paymentMethod")
                     navController.popBackStack(Screen.Home.route, false) // Điều hướng về Trang Chủ
                 },
-                onBack = { navController.popBackStack() } // Quay lại giỏ hàng
+                onBack = { navController.popBackStack() }
             )
         }
 

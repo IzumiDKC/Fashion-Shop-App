@@ -1,5 +1,6 @@
 package com.example.fashionshopapp.screens
 
+import ProfileViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,7 +14,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fashionshopapp.R
-import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 @Composable
 fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
@@ -40,7 +40,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
                 .padding(bottom = 32.dp)
         )
 
-        // Tạo các trường nhập liệu
         TextField(
             value = username,
             onValueChange = { username = it },
@@ -78,7 +77,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Nút Đăng ký
         Button(
             onClick = {
                 viewModel.register(username, fullName, email, password) { success, errors ->
@@ -95,7 +93,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
             Text("Đăng ký", color = MaterialTheme.colorScheme.onPrimary)
         }
 
-        // Hiển thị lỗi
         errorMessages?.let { errors ->
             Spacer(modifier = Modifier.height(8.dp))
             Column {
@@ -111,7 +108,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Liên kết Đăng nhập
         Text(
             text = "Đã có tài khoản? Đăng nhập tại đây",
             color = MaterialTheme.colorScheme.primary,

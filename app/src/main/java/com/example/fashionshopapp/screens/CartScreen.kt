@@ -1,5 +1,7 @@
 package com.example.fashionshopapp.screens
 
+import ProfileViewModel
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +28,7 @@ import coil.compose.rememberImagePainter
 import com.example.fashionshopapp.Screen
 import com.example.fashionshopapp.models.CartItem
 import com.example.fashionshopapp.viewmodel.CartViewModel
-import com.example.fashionshopapp.viewmodel.ProfileViewModel
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun CartScreen(
@@ -35,17 +37,16 @@ fun CartScreen(
     profileViewModel: ProfileViewModel = viewModel()
 ) {
     val cartItems = cartViewModel.cartItems
-    val isLoggedIn by remember { mutableStateOf(profileViewModel.isLoggedIn) } // Theo dõi trạng thái đăng nhập
+    val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
     var showLoginDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(isLoggedIn) {
-        if (!isLoggedIn) {
-            showLoginDialog = true
-        }
+        Log.d("CartScreen", "isLoggedIn: $isLoggedIn")
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Giỏ Hàng", style = MaterialTheme.typography.h5)
+
         if (cartItems.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("Giỏ hàng trống", color = Color.Black)
@@ -55,9 +56,7 @@ fun CartScreen(
                 items(cartItems) { cartItem ->
                     CartItemRow(
                         cartItem = cartItem,
-                        onQuantityChange = { quantity ->
-                            cartViewModel.updateQuantity(cartItem.product, quantity)
-                        },
+                        onQuantityChange = { quantity -> cartViewModel.updateQuantity(cartItem.product, quantity) },
                         onRemove = { cartViewModel.removeFromCart(cartItem.product) }
                     )
                 }
@@ -88,7 +87,6 @@ fun CartScreen(
             }
         }
     }
-
     if (showLoginDialog) {
         AlertDialog(
             onDismissRequest = { showLoginDialog = false },
@@ -114,6 +112,7 @@ fun CartScreen(
         )
     }
 }
+
 
 
 
@@ -149,3 +148,4 @@ fun CartItemRow(
         }
     }
 }
+

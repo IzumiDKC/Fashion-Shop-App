@@ -1,5 +1,6 @@
 package com.example.fashionshopapp.screens
 
+import ProfileViewModel
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -7,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 @Composable
 fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
@@ -39,7 +39,7 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
                 viewModel.login(username, password) { success ->
                     loginError = !success
                     if (success) {
-                        navController.navigate("profile") { popUpTo("profile") { inclusive = true } }
+                        navController.popBackStack()
                     }
                 }
             },
@@ -60,3 +60,4 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
         )
     }
 }
+

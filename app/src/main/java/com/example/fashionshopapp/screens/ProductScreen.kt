@@ -74,7 +74,7 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
 
             if (successMessage != null) {
                 LaunchedEffect(successMessage) {
-                    kotlinx.coroutines.delay(2000) // Tự động ẩn thông báo sau 2 giây
+                    kotlinx.coroutines.delay(2000)
                     successMessage = null
                 }
 

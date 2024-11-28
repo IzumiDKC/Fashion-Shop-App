@@ -1,45 +1,42 @@
-package com.example.fashionshopapp.viewmodel
-
-import androidx.compose.runtime.mutableStateOf
+import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fashionshopapp.api.RegisterRequest
 import com.example.fashionshopapp.repository.AuthRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel : ViewModel() {
     private val repository = AuthRepository()
+    val _isLoggedIn = MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
-    // Các trạng thái của người dùng
-    var isLoggedIn by mutableStateOf(false)
-        private set
-    var username by mutableStateOf<String?>(null) // Lưu trữ tên người dùng
-    var errorMessage by mutableStateOf("") // Lưu thông báo lỗi khi có lỗi
+    var username by mutableStateOf<String?>(null)
+    var errorMessage by mutableStateOf("")
 
-    // Đăng nhập
     fun login(username: String, password: String, onLoginResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             repository.login(username, password) { success, token ->
                 if (success) {
-                    this@ProfileViewModel.username = username  // Lưu tên người dùng khi đăng nhập thành công
-                    isLoggedIn = true
-                    // Lưu token vào SharedPreferences (nếu cần)
+                    this@ProfileViewModel.username = username
+                    _isLoggedIn.value = true
                 }
                 onLoginResult(success)
             }
         }
     }
 
-    // Đăng xuất
+
     fun logout() {
-        isLoggedIn = false
-        username = null  // Xóa thông tin người dùng khi đăng xuất
-        // Xóa token hoặc các thông tin đăng nhập lưu trữ (nếu cần)
+        _isLoggedIn.value = false
+        username = null
+        // Xóa token
     }
 
-    // Đăng ký người dùng mới
     fun register(
         username: String,
         fullName: String,
@@ -50,7 +47,7 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch {
             repository.register(username, password, fullName, email) { success, errors ->
                 if (success) {
-                    this@ProfileViewModel.username = username  // Lưu tên người dùng sau khi đăng ký thành công
+                    this@ProfileViewModel.username = username
                 }
                 onRegisterResult(success, errors)
             }
