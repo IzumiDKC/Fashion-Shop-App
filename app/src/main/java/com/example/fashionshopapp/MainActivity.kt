@@ -33,9 +33,11 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.CheckoutScreen
+import com.example.fashionshopapp.screens.LoginScreen
 import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.screens.ProfileScreen
 import com.example.fashionshopapp.screens.RegisterScreen
+import com.example.fashionshopapp.screens.WeatherScreen
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 class MainActivity : ComponentActivity() {
@@ -64,7 +66,7 @@ fun MainScreen() {
 fun BottomNavigationBar(navController: NavHostController) {
     val items = listOf(
         Screen.Home,
-        Screen.Test1,
+        Screen.Weather,
         Screen.Cart,
         Screen.Profile
     )
@@ -96,7 +98,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Home : Screen("home", "Trang Chủ", Icons.Default.Home)
-    object Test1 : Screen("test1", "Test 1", Icons.Default.Star)
+    object Weather : Screen("weather", "Weather", Icons.Default.Star)
     object Cart : Screen("cart", "Giỏ Hàng", Icons.Default.ShoppingCart)
     object Profile : Screen("profile", "Hồ Sơ", Icons.Default.Person)
 }
@@ -108,17 +110,18 @@ fun NavigationGraph(navController: NavHostController) {
 
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) { HomeScreen(cartViewModel) }
-        composable(Screen.Test1.route) { Test1Screen() }
+        composable(Screen.Weather.route) { WeatherScreen() }
         composable(Screen.Cart.route) { CartScreen( navController, cartViewModel) }
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
         }
-        composable("register") {
-            RegisterScreen(
-                viewModel = profileViewModel,
-                onBackToLogin = { navController.navigate(Screen.Profile.route) }
-            )
+        composable("login") {
+            LoginScreen(viewModel = profileViewModel, navController = navController)
         }
+        composable("register") {
+            RegisterScreen(viewModel = profileViewModel, navController = navController)
+        }
+
         composable(
             route = "checkout/{totalPrice}",
             arguments = listOf(navArgument("totalPrice") { type = NavType.StringType })
