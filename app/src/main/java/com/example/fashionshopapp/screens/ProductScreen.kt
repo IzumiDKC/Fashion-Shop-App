@@ -1,3 +1,10 @@
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -16,7 +24,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
+import com.example.fashionshopapp.ImageActivity
+import com.example.fashionshopapp.ProductAdapter
 import com.example.fashionshopapp.R
 import com.example.fashionshopapp.models.Product
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -29,6 +40,8 @@ import com.example.fashionshopapp.models.Category
 import com.example.fashionshopapp.repository.BrandRepository
 import com.example.fashionshopapp.repository.CategoryRepository
 import com.example.fashionshopapp.utils.AppBackground
+import com.example.fashionshopapp.viewmodel.ProductViewModel
+
 
 @Composable
 fun ProductScreen(onAddToCart: (Product) -> Unit) {
@@ -42,16 +55,119 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
     val brandRepository = BrandRepository()
     val categoryRepository = CategoryRepository()
 
+    //Image begin
+    val context = LocalContext.current
+
+    //Hu hu moi ne
+    var filteredProducts by remember { mutableStateOf(products) }
+
+    fun translateToVietnamese(label: String): String {
+        val dictionary = mapOf(
+            "Shirt" to "Áo sơ mi",
+            "Jeans" to "Quần jean",
+            "T-shirt" to "Áo phông",
+            "Sneakers" to "Giày",
+            "Shoe" to "Giày",
+            "Dress" to "Váy",
+            "Outfits" to "Đồ bộ",
+            "Outerwear" to "Áo ấm",
+            "Jacket" to "Áo sơ mi",
+            "Shorts" to "Quần short",
+            "Socks" to "Tất",
+            "Tie" to "Cà vạt",
+            "Tie clip" to "Kẹp cà vạt"
+        )
+        return dictionary[label] ?: label
+    }
+
+    val categoryMap = mapOf(
+        1 to "Áo sơ mi",
+        2 to "Quần jean",
+        3 to "Áo phông",
+        4 to "Giày",
+        5 to "Váy",
+        6 to "Đồ bộ",
+        7 to "Áo ấm",
+        8 to "Quần short",
+        9 to "Tất",
+        10 to "Cà vạt",
+        11 to "Kẹp cà vạt"
+    )
+
+    val productAdapter = remember { ProductAdapter(filteredProducts) }
+
+    fun updateProductList(filteredProducts: List<Product>){
+        productAdapter.updateData(filteredProducts)
+    }
+
+    fun searchProductsByLabels(labels: List<String>) {
+        Log.d("ProductScreen", "Labels before translation: $labels")
+        val translatedLabels = labels.map { translateToVietnamese(it) }
+        Log.d("ProductScreen", "Translated labels: $translatedLabels")
+
+        filteredProducts = products.filter { product ->
+            val categoryName = categoryMap[product.categoryId] ?: ""
+            val matches = translatedLabels.any { label -> categoryName.contains(label, ignoreCase = true) }
+            Log.d("ProductScreen", "Checking product: ${product.name}, category: $categoryName, matches: $matches")
+            matches
+        }
+
+        if (translatedLabels.contains("Quần jean")) {
+            filteredProducts = filteredProducts.filter { product ->
+                val categoryName = categoryMap[product.categoryId] ?: ""
+                categoryName == "Quần jean" // So khớp chính xác "Quần jean"
+            }
+        }
+
+        if (filteredProducts.isEmpty()) {
+            Toast.makeText(context, "Không tìm thấy sản phẩm phù hợp!", Toast.LENGTH_SHORT).show()
+        } else {
+            Log.d("ProductScreen", "Filtered products: $filteredProducts")
+        }
+        updateProductList(filteredProducts)
+    }
+
+
+    val imageActivityLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val labels = result.data?.getStringArrayListExtra("detectedLabels")
+            Log.d("ProductScreen", "Detected labels: $labels")
+            labels?.let {
+                searchProductsByLabels(it) }
+        }else {
+            Log.d("ProductScreen", "ImageActivity canceled or no labels detected")
+        }
+    }
+
+    //Image end
+
+
     LaunchedEffect(Unit) {
         products = productRepository.fetchProducts()
         brands = brandRepository.fetchBrands()
         categories = categoryRepository.fetchCategories()
+
+        //Moi ne
+        Log.d("ProductScreen", "Loaded products: $products")
+        Log.d("ProductScreen", "Loaded categories: $categories")
+    }
+
+    LaunchedEffect(filteredProducts) {
+        // This will trigger when filteredProducts is updated
+        products = filteredProducts
+        updateProductList(filteredProducts)
+        Log.d("ProductScreen", "Loaded new products: $filteredProducts")
     }
 
     AppBackground {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
+                SearchBar(searchText = searchText, onSearchTextChange = { searchText = it }, onImageClick = {
+                    val intent = Intent(context, ImageActivity::class.java)
+                    imageActivityLauncher.launch(intent)
+                })
 
                 val filteredProducts = products.filter {
                     it.name.contains(searchText, ignoreCase = true)
@@ -74,7 +190,7 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
 
             if (successMessage != null) {
                 LaunchedEffect(successMessage) {
-                    kotlinx.coroutines.delay(2000) // Tự động ẩn thông báo sau 2 giây
+                    delay(2000) // Tự động ẩn thông báo sau 2 giây
                     successMessage = null
                 }
 
@@ -97,13 +213,8 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
             }
         }
     }
+
 }
-
-
-
-
-
-
 
 
 @Composable
