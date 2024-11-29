@@ -22,8 +22,11 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch {
             repository.login(username, password) { success, token ->
                 if (success) {
-                    this@ProfileViewModel.username = username
                     _isLoggedIn.value = true
+                    this@ProfileViewModel.username = username
+                }
+                else{
+                    _isLoggedIn.value = false
                 }
                 onLoginResult(success)
             }

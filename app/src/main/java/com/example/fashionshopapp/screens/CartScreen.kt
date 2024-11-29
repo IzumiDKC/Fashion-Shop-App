@@ -35,13 +35,14 @@ fun CartScreen(
     navController: NavController,
     cartViewModel: CartViewModel = viewModel(),
     profileViewModel: ProfileViewModel = viewModel()
+
 ) {
     val cartItems = cartViewModel.cartItems
     val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
     var showLoginDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(isLoggedIn) {
-        Log.d("CartScreen", "isLoggedIn: $isLoggedIn")
+        Log.d("CartScreen", "isLoggedIn updated: $isLoggedIn")
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {

@@ -111,7 +111,9 @@ fun NavigationGraph(navController: NavHostController) {
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) { HomeScreen(cartViewModel) }
         composable(Screen.Weather.route) { WeatherScreen() }
-        composable(Screen.Cart.route) { CartScreen( navController, cartViewModel) }
+
+        composable(Screen.Cart.route) { CartScreen( navController, cartViewModel, profileViewModel = profileViewModel) }
+
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
         }
