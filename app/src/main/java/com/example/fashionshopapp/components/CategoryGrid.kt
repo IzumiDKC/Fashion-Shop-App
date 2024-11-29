@@ -23,7 +23,7 @@ fun CategoryGrid() {
         CustomCategory(7, "Test 7", R.drawable.sale),
         CustomCategory(8, "Test 8", R.drawable.sale),
         CustomCategory(9, "Test 9", R.drawable.sale),
-        CustomCategory(10, "Test 10", R.drawable.sale),
+        CustomCategory(10, "Test ", R.drawable.sale),
     )
 
     Column(modifier = Modifier.fillMaxWidth()) {

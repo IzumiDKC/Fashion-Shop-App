@@ -11,6 +11,11 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import java.text.DecimalFormat
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,15 +23,27 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.fashionshopapp.Screen
 import com.example.fashionshopapp.models.CartItem
 import com.example.fashionshopapp.viewmodel.CartViewModel
+import com.example.fashionshopapp.viewmodel.ProfileViewModel
 
 @Composable
 fun CartScreen(
     navController: NavController,
-    cartViewModel: CartViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel(),
+    profileViewModel: ProfileViewModel = viewModel()
 ) {
     val cartItems = cartViewModel.cartItems
+    val isLoggedIn by remember { mutableStateOf(profileViewModel.isLoggedIn) } // Theo dõi trạng thái đăng nhập
+    var showLoginDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isLoggedIn) {
+        if (!isLoggedIn) {
+            showLoginDialog = true
+        }
+    }
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Giỏ Hàng", style = MaterialTheme.typography.h5)
         if (cartItems.isEmpty()) {
@@ -58,12 +75,43 @@ fun CartScreen(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Button(
-                    onClick = { navController.navigate("checkout/${totalPrice}") }
+                    onClick = {
+                        if (isLoggedIn) {
+                            navController.navigate("checkout/${totalPrice}")
+                        } else {
+                            showLoginDialog = true
+                        }
+                    }
                 ) {
                     Text("Thanh toán")
                 }
             }
         }
+    }
+
+    if (showLoginDialog) {
+        AlertDialog(
+            onDismissRequest = { showLoginDialog = false },
+            title = { Text("Bạn chưa đăng nhập") },
+            text = { Text("Bạn cần đăng nhập để tiếp tục thanh toán.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showLoginDialog = false
+                        navController.navigate("login") {
+                            popUpTo(Screen.Cart.route) { inclusive = false }
+                        }
+                    }
+                ) {
+                    Text("Đăng nhập")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showLoginDialog = false }) {
+                    Text("Trở về")
+                }
+            }
+        )
     }
 }
 

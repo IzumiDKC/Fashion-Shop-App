@@ -10,9 +10,12 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 class ImageActivity: ComponentActivity() {
@@ -48,29 +51,10 @@ class ImageActivity: ComponentActivity() {
 
         // Ánh xạ các View
         selectedImageView = findViewById(R.id.selectedImage)
-        confirmButton = findViewById(R.id.confirmButton)
-
 
         // Yêu cầu chọn ảnh khi activity được khởi chạy
         imagePickerLauncher.launch("image/*")
 
-        // Xử lý khi nhấn nút Xác nhận
-        confirmButton.setOnClickListener {
-            // Thay doi ne
-            if (detectedLabels.isNullOrEmpty()) {
-                Toast.makeText(this, "Chưa có nhãn phân tích!", Toast.LENGTH_SHORT).show()
-            } else {
-                val resultIntent = Intent().apply {
-                    putStringArrayListExtra("detectedLabels", detectedLabels)
-                }
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish() // Đóng activity và trả kết quả
-            }
-
-            /*Toast.makeText(this, "Nhấn xác nhận để gửi kết quả!", Toast.LENGTH_SHORT).show()
-            setResult(Activity.RESULT_OK)
-            finish()*/
-        }
     }
 
     private fun processImageUri(uri: Uri) {
@@ -79,36 +63,36 @@ class ImageActivity: ComponentActivity() {
             val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
             labeler.process(image)
                 .addOnSuccessListener { labels ->
-                    //bo val o day
-                    detectedLabels = ArrayList(labels.map { it.text })
-                    //Moi ne (xem loi)
-                    Log.d("ImageActivity", "Labels detected: $detectedLabels")
-                    //Moi tiep ne
-                    Toast.makeText(this, "Phân tích hoàn tất. Nhấn xác nhận để tiếp tục.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ImageActivity, "Đang phân tích. Vui lòng chờ trong giây lát.", Toast.LENGTH_SHORT).show()
+                    lifecycleScope.launch{
+                        delay(2000)
+                        detectedLabels = ArrayList(labels.map { it.text })
+                        Log.d("ImageActivity", "Labels detected: $detectedLabels")
 
-                    /*val resultIntent = Intent().apply {
-                        putStringArrayListExtra("detectedLabels", detectedLabels)
+
+                        //Toast.makeText(this@ImageActivity, "Đang phân tích. Vui lòng chờ trong giây lát.", Toast.LENGTH_SHORT).show()
+
+                        val resultIntent = Intent().apply {
+                            putStringArrayListExtra("detectedLabels", detectedLabels)
+                        }
+                        setResult(Activity.RESULT_OK, resultIntent)
+                        finish()
                     }
-                    setResult(Activity.RESULT_OK, resultIntent)*/
-                    //finish()
+
                 }
                 .addOnFailureListener { e ->
                     Log.e("ImageActivity", "Error processing image", e)
                     //Moi nua ne
                     Toast.makeText(this, "Lỗi phân tích ảnh!", Toast.LENGTH_SHORT).show()
 
-                    //setResult(Activity.RESULT_CANCELED)
-                    //finish()
-                }
-                //Moi
-                /*.addOnCompleteListener{
+                    setResult(Activity.RESULT_CANCELED)
                     finish()
-                }*/
+                }
         } catch (e: IOException) {
             Log.e("ImageActivity", "Lỗi đọc ảnh: ", e)
             Toast.makeText(this, "Lỗi xử lý ảnh!", Toast.LENGTH_SHORT).show()
-            /*setResult(Activity.RESULT_CANCELED)
-            finish()*/
+            setResult(Activity.RESULT_CANCELED)
+            finish()
         }
     }
 }
