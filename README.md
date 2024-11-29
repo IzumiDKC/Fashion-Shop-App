@@ -145,3 +145,9 @@ Tối ưu hệ thống
 Fix logic lấy giá trị isLogin ở CartScreen từ Profile. Đảm bảo không chạy vòng lặp đăng nhập ở dialog
 
 Bổ sung 1 số thư viện cần thiết
+
+## Update 30/11/2024:
+
+[02:04] Tích hợp cả [Open Weather](https://openweathermap.org/) lấy tọa độ x, y tương ứng với [ip-api](http://ip-api.com/json/). Đưa ra lời khuyên dựa theo thời tiết hiện tại
+
+Thiết kế giao diện hiển thị WeatherScreen
