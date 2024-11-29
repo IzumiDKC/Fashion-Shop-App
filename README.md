@@ -134,9 +134,14 @@ Tiếp tục fix nhưng không thành công => chuyển sang dùng http của ip
 
 Logic yêu cầu thanh toán khi đã đăng nhập (11:29)
 
-## 28/11/2024:
+## Update 28/11/2024:
 
 Tối ưu hệ thống
 
 Điều chỉnh logic cart (vẫn chưa nhận giá trị Islogin)
 
+## Update 29/11/2024:
+
+Fix logic lấy giá trị isLogin ở CartScreen từ Profile. Đảm bảo không chạy vòng lặp đăng nhập ở dialog
+
+Bổ sung 1 số thư viện cần thiết
