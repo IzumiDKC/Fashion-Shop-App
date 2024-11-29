@@ -53,6 +53,12 @@ android {
 dependencies {
 
 
+    // animation
+    implementation ("com.airbnb.android:lottie-compose:6.0.0")
+
+    //icon
+    implementation ("androidx.compose.material:material-icons-extended:1.5.1")
+
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")

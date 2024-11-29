@@ -25,10 +25,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.rounded.WbSunny
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -98,7 +100,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Home : Screen("home", "Trang Chủ", Icons.Default.Home)
-    object Weather : Screen("weather", "Weather", Icons.Default.Star)
+    object Weather : Screen("weather", "Weather", Icons.Rounded.WbSunny)
     object Cart : Screen("cart", "Giỏ Hàng", Icons.Default.ShoppingCart)
     object Profile : Screen("profile", "Hồ Sơ", Icons.Default.Person)
 }
