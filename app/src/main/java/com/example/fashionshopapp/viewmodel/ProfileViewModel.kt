@@ -1,11 +1,10 @@
-import android.util.Log
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshopapp.repository.AuthRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,6 +16,7 @@ class ProfileViewModel : ViewModel() {
 
     var username by mutableStateOf<String?>(null)
     var errorMessage by mutableStateOf("")
+    var isRefreshing = MutableStateFlow(false) // Trạng thái làm mới
 
     fun login(username: String, password: String, onLoginResult: (Boolean) -> Unit) {
         viewModelScope.launch {
@@ -24,15 +24,13 @@ class ProfileViewModel : ViewModel() {
                 if (success) {
                     _isLoggedIn.value = true
                     this@ProfileViewModel.username = username
-                }
-                else{
+                } else {
                     _isLoggedIn.value = false
                 }
                 onLoginResult(success)
             }
         }
     }
-
 
     fun logout() {
         _isLoggedIn.value = false
@@ -54,6 +52,16 @@ class ProfileViewModel : ViewModel() {
                 }
                 onRegisterResult(success, errors)
             }
+        }
+    }
+
+    // Làm mới dữ liệu
+    fun refreshProfileData() {
+        viewModelScope.launch {
+            isRefreshing.value = true // Bắt đầu làm mới
+            delay(2000) // Mô phỏng thời gian lấy dữ liệu
+            // TODO: Gọi API để làm mới dữ liệu
+            isRefreshing.value = false // Hoàn tất làm mới
         }
     }
 }

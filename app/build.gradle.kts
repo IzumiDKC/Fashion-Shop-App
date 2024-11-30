@@ -53,21 +53,19 @@ android {
 dependencies {
 
 
+    // swipeRefresh
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.30.1")
     // animation
     implementation ("com.airbnb.android:lottie-compose:6.0.0")
-
     //icon
     implementation ("androidx.compose.material:material-icons-extended:1.5.1")
-
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
-
     // gps
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.google.accompanist:accompanist-permissions:0.28.0")
-
     // ViewModel và LiveData
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")

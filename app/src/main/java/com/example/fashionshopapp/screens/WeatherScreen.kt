@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.*
 import com.example.fashionshopapp.R
+import com.example.fashionshopapp.utils.translateWeatherDescription
 import com.example.fashionshopapp.viewmodel.WeatherViewModel
 
 @Composable
@@ -35,15 +36,16 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
         }
 
         val gradientColors = when {
-            temperature < 15 -> listOf(Color(0xFF1E3C72), Color(0xFF2A5298)) // Cold colors
-            temperature in 15.0..25.0 -> listOf(Color(0xFF56CCF2), Color(0xFF2F80ED)) // Mild colors
-            else -> listOf(Color(0xFFFF8008), Color(0xFFFFC837)) // Warm colors
+            temperature < 15 -> listOf(Color(0xFF1E3C72), Color(0xFF2A5298))
+            temperature in 15.0..25.0 -> listOf(Color(0xFF56CCF2), Color(0xFF2F80ED))
+            else -> listOf(Color(0xFFFF8008), Color(0xFFFFC837))
         }
 
         WeatherContent(
-            city = weatherDetails!!.name,
+            city = weatherState!!.city,
+            regionName = weatherState!!.regionName,
             temperature = temperature,
-            weatherDescription = weatherDetails!!.weather[0].description,
+            weatherDescription = translateWeatherDescription(weatherDetails!!.weather[0].description),
             animationRes = animationRes,
             gradientColors = gradientColors
         )
@@ -55,6 +57,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
 @Composable
 fun WeatherContent(
     city: String,
+    regionName: String,
     temperature: Double,
     weatherDescription: String,
     @RawRes animationRes: Int,
@@ -73,7 +76,7 @@ fun WeatherContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Vị trí hiện tại: $city",
+                text = "Vị trí hiện tại: $city", // $regionName
                 style = MaterialTheme.typography.h4,
                 color = Color.White
             )
@@ -83,10 +86,11 @@ fun WeatherContent(
                 color = Color.White
             )
             Text(
-                text = "Thời tiết: ${weatherDescription.capitalize()}",
+                text = "Thời tiết: $weatherDescription",
                 style = MaterialTheme.typography.h5,
                 color = Color.White
             )
+
 
             val suggestion = when {
                 temperature < 15 -> "Hãy mặc áo khoác dày!"

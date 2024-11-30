@@ -23,11 +23,9 @@ class WeatherViewModel : ViewModel() {
     fun fetchCurrentWeatherAndDetails(apiKey: String) {
         viewModelScope.launch {
             try {
-                // Lấy thông tin vị trí
                 val location = weatherApiService.getCurrentWeather()
                 _weatherState.value = location
 
-                // Lấy thông tin thời tiết từ OpenWeather
                 val details = weatherDetailsApiService.getWeatherDetails(
                     lat = location.lat,
                     lon = location.lon,

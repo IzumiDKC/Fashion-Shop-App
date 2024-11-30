@@ -100,7 +100,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Home : Screen("home", "Trang Chủ", Icons.Default.Home)
-    object Weather : Screen("weather", "Weather", Icons.Rounded.WbSunny)
+    object Weather : Screen("weather", "Gợi Ý", Icons.Rounded.WbSunny)
     object Cart : Screen("cart", "Giỏ Hàng", Icons.Default.ShoppingCart)
     object Profile : Screen("profile", "Hồ Sơ", Icons.Default.Person)
 }

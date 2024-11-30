@@ -6,5 +6,5 @@ data class WeatherResponse(
     val regionName: String,
     val country: String,
     val lat: Double,
-    val lon: Double
+    val lon: Double,
 )
