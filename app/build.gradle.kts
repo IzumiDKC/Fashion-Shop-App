@@ -51,18 +51,28 @@ android {
 }
 
 dependencies {
-
-
-    // swipeRefresh
+    // Image
+    implementation("androidx.compose.material3:material3:1.1.1")
+    implementation("androidx.compose.material:material-icons-extended:1.4.3")
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+    implementation("com.google.mlkit:image-labeling:17.0.9")
+    implementation("com.google.mlkit:image-labeling-custom:16.3.1")
+    implementation("com.google.mlkit:object-detection:17.0.0")
+    implementation("com.google.mlkit:vision-common:17.3.0")
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    // SwipeRefresh
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.30.1")
-    // animation
+    // Animation
     implementation ("com.airbnb.android:lottie-compose:6.0.0")
-    //icon
+    // Icon
     implementation ("androidx.compose.material:material-icons-extended:1.5.1")
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
-    // gps
+    // Gps
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.google.accompanist:accompanist-permissions:0.28.0")

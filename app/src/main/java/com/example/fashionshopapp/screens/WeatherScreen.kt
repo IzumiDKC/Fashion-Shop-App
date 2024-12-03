@@ -94,7 +94,7 @@ fun WeatherContent(
 
             val suggestion = when {
                 temperature < 15 -> "Hãy mặc áo khoác dày!"
-                temperature in 15.0..25.0 -> "Mặc áo khoác nhẹ hoặc áo dài tay."
+                temperature in 15.0..28.0 -> "Mặc áo khoác nhẹ hoặc áo dài tay."
                 else -> "Mặc áo ngắn tay hoặc quần short."
             }
             Text(

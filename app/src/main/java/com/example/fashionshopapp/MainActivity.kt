@@ -17,7 +17,7 @@ import com.example.fashionshopapp.utils.AppBackground
 import com.example.fashionshopapp.utils.BannerCarousel
 import CategoryGrid
 import ProductScreen
-import ProfileViewModel
+import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import android.annotation.SuppressLint
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -27,19 +27,19 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.rounded.WbSunny
 
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.CheckoutScreen
 import com.example.fashionshopapp.screens.LoginScreen
+import com.example.fashionshopapp.screens.ProfileDetail
 import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.screens.ProfileScreen
 import com.example.fashionshopapp.screens.RegisterScreen
+import com.example.fashionshopapp.screens.UpdateProfile
 import com.example.fashionshopapp.screens.WeatherScreen
 
 class MainActivity : ComponentActivity() {
@@ -96,8 +96,6 @@ fun BottomNavigationBar(navController: NavHostController) {
     }
 }
 
-
-
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Home : Screen("home", "Trang Chủ", Icons.Default.Home)
     object Weather : Screen("weather", "Gợi Ý", Icons.Rounded.WbSunny)
@@ -114,7 +112,7 @@ fun NavigationGraph(navController: NavHostController) {
         composable(Screen.Home.route) { HomeScreen(cartViewModel) }
         composable(Screen.Weather.route) { WeatherScreen() }
 
-        composable(Screen.Cart.route) { CartScreen( navController, cartViewModel, profileViewModel = profileViewModel) }
+        composable(Screen.Cart.route) { CartScreen(navController, cartViewModel, profileViewModel = profileViewModel) }
 
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
@@ -135,46 +133,31 @@ fun NavigationGraph(navController: NavHostController) {
                 totalPrice = totalPrice,
                 onConfirmPayment = { paymentMethod ->
                     println("Phương thức thanh toán: $paymentMethod")
-                    navController.popBackStack(Screen.Home.route, false) // Điều hướng về Trang Chủ
+                    navController.popBackStack(Screen.Home.route, false)
                 },
                 onBack = { navController.popBackStack() }
             )
         }
+        composable("profile_detail") {
+            ProfileDetail(viewModel = profileViewModel, navController = navController)
+        }
+        composable("updateProfile/{userId}") { backStackEntry ->
+            UpdateProfile(profileViewModel, navController, backStackEntry.arguments?.getString("userId") ?: "")
+        }
+
+
 
     }
 }
 
-
-
-
 @Composable
 fun HomeScreen(cartViewModel: CartViewModel = viewModel()) {
-
     AppBackground {
         Column(modifier = Modifier.fillMaxSize()) {
             BannerCarousel()
             CategoryGrid()
             Spacer(modifier = Modifier.height(16.dp))
             ProductScreen(onAddToCart = { product -> cartViewModel.addToCart(product) })
-
         }
     }
 }
-
-
-
-
-
-
-
-@Composable
-fun Test1Screen() {
-    AppBackground {
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            Text("Đây là màn hình Test 1")
-        }
-    }
-}
-
-
-

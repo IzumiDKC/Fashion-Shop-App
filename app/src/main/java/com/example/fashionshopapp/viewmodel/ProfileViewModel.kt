@@ -1,8 +1,15 @@
+package com.example.fashionshopapp.viewmodel
+
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fashionshopapp.api.RetrofitInstance
+import com.example.fashionshopapp.models.UpdateProfileRequest
+import com.example.fashionshopapp.models.UserProfile
 import com.example.fashionshopapp.repository.AuthRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,17 +20,44 @@ class ProfileViewModel : ViewModel() {
     private val repository = AuthRepository()
     val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
-
     var username by mutableStateOf<String?>(null)
-    var errorMessage by mutableStateOf("")
-    var isRefreshing = MutableStateFlow(false) // Trạng thái làm mới
+    var userProfile by mutableStateOf<UserProfile?>(null)
+    var userId by mutableStateOf<String?>(null) // Lưu userId
+
+
+    // Trong ProfileViewModel
+    fun getProfile(onResult: (UserProfile?) -> Unit) {
+        val userId = this.userId
+        if (userId != null) {
+            viewModelScope.launch {
+                // Gọi API GetProfile với userId
+                try {
+                    val response = RetrofitInstance.api.getProfile(userId) // Gọi API ở đây
+                    if (response.isSuccessful) {
+                        val profileDetail = response.body() // Lấy dữ liệu profile
+                        onResult(profileDetail) // Trả về dữ liệu
+                    } else {
+                        onResult(null) // Không thành công
+                    }
+                } catch (e: Exception) {
+                    onResult(null) // Xử lý lỗi
+                }
+            }
+        } else {
+            onResult(null) // Nếu không có userId
+        }
+    }
+
+
 
     fun login(username: String, password: String, onLoginResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            repository.login(username, password) { success, token ->
+            repository.login(username, password) { success, token, userId ->
                 if (success) {
                     _isLoggedIn.value = true
                     this@ProfileViewModel.username = username
+                    this@ProfileViewModel.userId = userId // Lưu userId sau khi login
+                    Log.d("Login", userId ?: "No UserId")
                 } else {
                     _isLoggedIn.value = false
                 }
@@ -31,6 +65,7 @@ class ProfileViewModel : ViewModel() {
             }
         }
     }
+
 
     fun logout() {
         _isLoggedIn.value = false
@@ -48,20 +83,18 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch {
             repository.register(username, password, fullName, email) { success, errors ->
                 if (success) {
-                    this@ProfileViewModel.username = username
+                    // Tự động đăng nhập sau khi đăng ký
+                    login(username, password) { loginSuccess ->
+                        if (loginSuccess) {
+                            Log.d("AuthToken", "Token: ${repository.getCurrentToken()}")
+                        }
+                    }
                 }
                 onRegisterResult(success, errors)
             }
         }
     }
 
-    // Làm mới dữ liệu
-    fun refreshProfileData() {
-        viewModelScope.launch {
-            isRefreshing.value = true // Bắt đầu làm mới
-            delay(2000) // Mô phỏng thời gian lấy dữ liệu
-            // TODO: Gọi API để làm mới dữ liệu
-            isRefreshing.value = false // Hoàn tất làm mới
-        }
-    }
+
+
 }

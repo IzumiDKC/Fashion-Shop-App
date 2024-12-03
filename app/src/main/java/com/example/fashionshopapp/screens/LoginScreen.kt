@@ -1,6 +1,6 @@
 package com.example.fashionshopapp.screens
 
-import ProfileViewModel
+import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

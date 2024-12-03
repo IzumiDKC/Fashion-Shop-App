@@ -13,7 +13,6 @@ fun CheckoutScreen(
     onConfirmPayment: (String) -> Unit,
     onBack: () -> Unit
 ) {
-    // State để lưu trữ phương thức thanh toán đã chọn
     var selectedPaymentMethod by remember { mutableStateOf<String?>(null) }
 
     Column(

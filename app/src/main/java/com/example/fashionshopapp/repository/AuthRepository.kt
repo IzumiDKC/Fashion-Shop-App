@@ -13,20 +13,30 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class AuthRepository {
-    fun login(username: String, password: String, onResult: (Boolean, String?) -> Unit) {
+
+    private var currentToken: String? = null
+
+    fun getCurrentToken(): String? = currentToken
+
+
+    fun login(username: String, password: String, onResult: (Boolean, String?, String?) -> Unit) {
         val request = LoginRequest(username, password)
         RetrofitInstance.api.login(request).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
                     val token = response.body()?.token
-                    onResult(true, token)
+                    val userId = response.body()?.userId  // Lấy userId
+                    currentToken = token // Lưu token
+                    Log.d("LoginToken", "Token: $token, UserId: $userId")
+
+                    onResult(true, token, userId)
                 } else {
-                    onResult(false, null)
+                    onResult(false, null, null)
                 }
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                onResult(false, null)
+                onResult(false, null, null)
             }
         })
     }

@@ -1,6 +1,6 @@
 package com.example.fashionshopapp.screens
 
-import ProfileViewModel
+import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -83,9 +83,10 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
                     if (!success) {
                         errorMessages = errors
                     } else {
-                        navController.navigate("login") { popUpTo("login") { inclusive = true } }
+                        navController.navigate("home") { popUpTo("home") { inclusive = true } }
                     }
                 }
+
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)

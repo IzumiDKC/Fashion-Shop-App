@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fashionshopapp.api.ApiService
 import com.example.fashionshopapp.models.CartItem
+import com.example.fashionshopapp.models.CreateOrderRequest
 import com.example.fashionshopapp.models.Product
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,4 +40,8 @@ class CartViewModel : ViewModel() {
     fun clearCart() {
         _cartItems.clear()
     }
+
+
+
+
 }

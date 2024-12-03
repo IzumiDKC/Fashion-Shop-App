@@ -42,6 +42,7 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
     val brandRepository = BrandRepository()
     val categoryRepository = CategoryRepository()
 
+
     LaunchedEffect(Unit) {
         products = productRepository.fetchProducts()
         brands = brandRepository.fetchBrands()
@@ -90,7 +91,7 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
-                            .background(Color(0xFF4CAF50)) // Màu nền thông báo
+                            .background(Color(0xFF4CAF50))
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
