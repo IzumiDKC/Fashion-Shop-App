@@ -142,8 +142,14 @@ fun NavigationGraph(navController: NavHostController) {
             ProfileDetail(viewModel = profileViewModel, navController = navController)
         }
         composable("updateProfile/{userId}") { backStackEntry ->
-            UpdateProfile(profileViewModel, navController, backStackEntry.arguments?.getString("userId") ?: "")
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            if (userId.isNotEmpty()) {
+                UpdateProfile(viewModel = profileViewModel, navController, userId)
+            } else {
+                navController.popBackStack(Screen.Home.route, false)
+            }
         }
+
 
 
 

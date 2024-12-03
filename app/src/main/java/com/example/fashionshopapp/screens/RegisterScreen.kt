@@ -79,21 +79,23 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
 
         Button(
             onClick = {
-                viewModel.register(username, fullName, email, password) { success, errors ->
+                viewModel.register(username, fullName, email, password) { success, errors, loginSuccess ->
                     if (!success) {
                         errorMessages = errors
+                    } else if (loginSuccess) {
+                        navController.navigate("home") {
+                            popUpTo("register") { inclusive = true }
+                        }
                     } else {
-                        navController.navigate("home") { popUpTo("home") { inclusive = true } }
+                        errorMessages = listOf("Đăng ký thành công, nhưng không thể đăng nhập tự động.")
                     }
                 }
-
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text("Đăng ký", color = MaterialTheme.colorScheme.onPrimary)
         }
-
         errorMessages?.let { errors ->
             Spacer(modifier = Modifier.height(8.dp))
             Column {

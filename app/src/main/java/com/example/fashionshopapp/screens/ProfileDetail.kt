@@ -2,6 +2,7 @@ package com.example.fashionshopapp.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -23,14 +24,12 @@ import com.example.fashionshopapp.viewmodel.ProfileViewModel
 fun ProfileDetail(viewModel: ProfileViewModel, navController: NavController) {
     val profileDetail = remember { mutableStateOf<UserProfile?>(null) }
 
-    // Fetch profile data
     LaunchedEffect(viewModel.username) {
         viewModel.getProfile { profile ->
             profileDetail.value = profile
         }
     }
 
-    // Display profile data if available
     profileDetail.value?.let { profile ->
         Column(
             modifier = Modifier
@@ -39,7 +38,6 @@ fun ProfileDetail(viewModel: ProfileViewModel, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            // Header
             Text(
                 text = "Thông Tin Cá Nhân",
                 style = MaterialTheme.typography.h5.copy(
@@ -49,7 +47,6 @@ fun ProfileDetail(viewModel: ProfileViewModel, navController: NavController) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Profile Card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -66,11 +63,32 @@ fun ProfileDetail(viewModel: ProfileViewModel, navController: NavController) {
                     ProfileDetailItem(label = "Địa chỉ", value = profile.address ?: "Không có")
                     ProfileDetailItem(label = "Số điện thoại", value = profile.phoneNumber ?: "Không có")
                 }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Update Button
+                Button(
+                    onClick = {
+                        navController.navigate("updateProfile/${viewModel.userId}") },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                ) {
+                    Text("Cập nhật")
+                }
 
+                Button(
+                    onClick = { navController.popBackStack() },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Quay lại")
+                }
             }
         }
+
     } ?: run {
-        // Loading or error state
         Column(
             modifier = Modifier
                 .fillMaxSize()

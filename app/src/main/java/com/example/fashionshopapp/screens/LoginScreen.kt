@@ -36,19 +36,23 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             onClick = {
-                viewModel.login(username, password) { success ->
-                    loginError = !success
-                    if (success) {
-                        navController.popBackStack()
+                viewModel.login(username, password) { loginSuccess ->
+                    if (loginSuccess) {
+                        navController.navigate("home") {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    } else {
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text("Đăng nhập")
+            Text("Đăng nhập", color = MaterialTheme.colorScheme.onPrimary)
         }
+
         if (loginError) {
-            Text("Đăng nhập không thành công", color = MaterialTheme.colorScheme.error)
+            Text("Đăng nhập tất bạo. Voi lòng thử lại!", color = MaterialTheme.colorScheme.error)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(

@@ -5,7 +5,7 @@ import com.example.fashionshopapp.models.Category
 import com.example.fashionshopapp.models.CreateOrderRequest
 import com.example.fashionshopapp.models.Order
 import com.example.fashionshopapp.models.Product
-import com.example.fashionshopapp.models.UpdateProfileRequest
+import com.example.fashionshopapp.models.UpdatedProfileModel
 import com.example.fashionshopapp.models.UserProfile
 import retrofit2.Call
 import retrofit2.Response
@@ -41,8 +41,9 @@ interface ApiService {
     @PUT("api/account/update-profile/{userId}")
     suspend fun updateProfile(
         @Path("userId") userId: String,
-        @Body updateProfileRequest: UpdateProfileRequest
-    ): Response<Void>
+        @Body updatedProfile: UpdatedProfileModel
+    ): Response<Void> // Trả về Response<Void> vì API không cần trả về dữ liệu
+
 
 
 }

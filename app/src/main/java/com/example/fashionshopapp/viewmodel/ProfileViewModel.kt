@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshopapp.api.RetrofitInstance
-import com.example.fashionshopapp.models.UpdateProfileRequest
+import com.example.fashionshopapp.models.UpdatedProfileModel
 import com.example.fashionshopapp.models.UserProfile
 import com.example.fashionshopapp.repository.AuthRepository
 import kotlinx.coroutines.delay
@@ -25,7 +25,6 @@ class ProfileViewModel : ViewModel() {
     var userId by mutableStateOf<String?>(null) // Lưu userId
 
 
-    // Trong ProfileViewModel
     fun getProfile(onResult: (UserProfile?) -> Unit) {
         val userId = this.userId
         if (userId != null) {
@@ -47,6 +46,22 @@ class ProfileViewModel : ViewModel() {
             onResult(null) // Nếu không có userId
         }
     }
+
+    fun updateProfile(userId: String, updatedProfile: UpdatedProfileModel, onUpdateResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.api.updateProfile(userId, updatedProfile)
+                if (response.isSuccessful) {
+                    onUpdateResult(true) // Cập nhật thành công
+                } else {
+                    onUpdateResult(false) // Cập nhật thất bại
+                }
+            } catch (e: Exception) {
+                onUpdateResult(false) // Xử lý lỗi
+            }
+        }
+    }
+
 
 
 
@@ -78,22 +93,23 @@ class ProfileViewModel : ViewModel() {
         fullName: String,
         email: String,
         password: String,
-        onRegisterResult: (Boolean, List<String>?) -> Unit
+        onRegisterResult: (Boolean, List<String>?, Boolean) -> Unit
     ) {
         viewModelScope.launch {
             repository.register(username, password, fullName, email) { success, errors ->
                 if (success) {
                     // Tự động đăng nhập sau khi đăng ký
                     login(username, password) { loginSuccess ->
-                        if (loginSuccess) {
+                        onRegisterResult(success, errors, loginSuccess)
                             Log.d("AuthToken", "Token: ${repository.getCurrentToken()}")
-                        }
                     }
+                } else {
+                    onRegisterResult(false, errors, false)
                 }
-                onRegisterResult(success, errors)
             }
         }
     }
+
 
 
 

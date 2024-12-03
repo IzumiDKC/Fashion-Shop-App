@@ -11,7 +11,7 @@ data class UserProfile(
     val address: String,
     val phoneNumber: String
 )
-data class UpdateProfileRequest(
+data class UpdatedProfileModel(
     val username: String,
     val email: String,
     val fullName: String,
