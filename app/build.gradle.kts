@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.gms.google-services")
 }
 
 android {
@@ -69,9 +68,6 @@ dependencies {
     implementation ("com.airbnb.android:lottie-compose:6.0.0")
     // Icon
     implementation ("androidx.compose.material:material-icons-extended:1.5.1")
-    // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
-    implementation("com.google.firebase:firebase-analytics")
     // Gps
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
