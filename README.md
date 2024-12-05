@@ -151,3 +151,17 @@ Bổ sung 1 số thư viện cần thiết
 [02:04] Tích hợp cả [Open Weather](https://openweathermap.org/) lấy tọa độ x, y tương ứng với [ip-api](http://ip-api.com/json/). Đưa ra lời khuyên dựa theo thời tiết hiện tại
 
 Thiết kế giao diện hiển thị WeatherScreen
+
+## Update 1/122024 -> 3/12/2024
+
+Thêm trang ProfileDetail (chưa cập nhật được thông tin, hiện tại get bằng  UserID)
+
+Thêm 1 số thư viện cho firebase
+
+## Update 3/12/2024
+
+Chỉnh sửa ProfileDetail (đã put được thông tin)
+
+## 4/12/2024 -> 5/12/2024
+
+Xóa thư viện firebase dư thừa 
