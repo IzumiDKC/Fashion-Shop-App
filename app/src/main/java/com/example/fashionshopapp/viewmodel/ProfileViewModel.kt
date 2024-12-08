@@ -21,29 +21,28 @@ class ProfileViewModel : ViewModel() {
     val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
     var username by mutableStateOf<String?>(null)
-    var userProfile by mutableStateOf<UserProfile?>(null)
-    var userId by mutableStateOf<String?>(null) // Lưu userId
+    var userId by mutableStateOf<String?>(null)
+    var token by mutableStateOf<String?>(null)
 
 
     fun getProfile(onResult: (UserProfile?) -> Unit) {
         val userId = this.userId
         if (userId != null) {
             viewModelScope.launch {
-                // Gọi API GetProfile với userId
                 try {
-                    val response = RetrofitInstance.api.getProfile(userId) // Gọi API ở đây
+                    val response = RetrofitInstance.api.getProfile(userId)
                     if (response.isSuccessful) {
-                        val profileDetail = response.body() // Lấy dữ liệu profile
-                        onResult(profileDetail) // Trả về dữ liệu
+                        val profileDetail = response.body()
+                        onResult(profileDetail)
                     } else {
-                        onResult(null) // Không thành công
+                        onResult(null)
                     }
                 } catch (e: Exception) {
-                    onResult(null) // Xử lý lỗi
+                    onResult(null)
                 }
             }
         } else {
-            onResult(null) // Nếu không có userId
+            onResult(null)
         }
     }
 
@@ -52,12 +51,12 @@ class ProfileViewModel : ViewModel() {
             try {
                 val response = RetrofitInstance.api.updateProfile(userId, updatedProfile)
                 if (response.isSuccessful) {
-                    onUpdateResult(true) // Cập nhật thành công
+                    onUpdateResult(true)
                 } else {
-                    onUpdateResult(false) // Cập nhật thất bại
+                    onUpdateResult(false)
                 }
             } catch (e: Exception) {
-                onUpdateResult(false) // Xử lý lỗi
+                onUpdateResult(false)
             }
         }
     }
@@ -70,8 +69,9 @@ class ProfileViewModel : ViewModel() {
             repository.login(username, password) { success, token, userId ->
                 if (success) {
                     _isLoggedIn.value = true
+                    this@ProfileViewModel.token = token
                     this@ProfileViewModel.username = username
-                    this@ProfileViewModel.userId = userId // Lưu userId sau khi login
+                    this@ProfileViewModel.userId = userId
                     Log.d("Login", userId ?: "No UserId")
                 } else {
                     _isLoggedIn.value = false
@@ -85,7 +85,7 @@ class ProfileViewModel : ViewModel() {
     fun logout() {
         _isLoggedIn.value = false
         username = null
-        // Xóa token
+        token = null
     }
 
     fun register(
@@ -98,7 +98,6 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch {
             repository.register(username, password, fullName, email) { success, errors ->
                 if (success) {
-                    // Tự động đăng nhập sau khi đăng ký
                     login(username, password) { loginSuccess ->
                         onRegisterResult(success, errors, loginSuccess)
                             Log.d("AuthToken", "Token: ${repository.getCurrentToken()}")
@@ -109,8 +108,4 @@ class ProfileViewModel : ViewModel() {
             }
         }
     }
-
-
-
-
 }

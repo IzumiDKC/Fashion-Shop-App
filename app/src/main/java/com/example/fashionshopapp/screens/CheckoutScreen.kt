@@ -36,6 +36,9 @@ fun CheckoutScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Column {
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text("Chọn phương thức thanh toán:", style = MaterialTheme.typography.subtitle1)
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -93,3 +96,4 @@ fun CheckoutScreen(
         )
     }
 }
+

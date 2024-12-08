@@ -42,8 +42,17 @@ interface ApiService {
     suspend fun updateProfile(
         @Path("userId") userId: String,
         @Body updatedProfile: UpdatedProfileModel
-    ): Response<Void> // Trả về Response<Void> vì API không cần trả về dữ liệu
+    ): Response<Void>
+    /* @GET("api/account/profile")
+    suspend fun getProfile(
+        @Header("Authorization") token: String
+    ): Response<UserProfile>
 
+     @PUT("api/account/update-profile")
+     suspend fun updateProfile(
+         @Header("Authorization") token: String,
+         @Body updatedProfile: UpdatedProfileModel
+     ): Response<Void>*/
 
 
 }

@@ -13,11 +13,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class AuthRepository {
-
     private var currentToken: String? = null
-
     fun getCurrentToken(): String? = currentToken
-
 
     fun login(username: String, password: String, onResult: (Boolean, String?, String?) -> Unit) {
         val request = LoginRequest(username, password)
@@ -25,8 +22,8 @@ class AuthRepository {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
                     val token = response.body()?.token
-                    val userId = response.body()?.userId  // Lấy userId
-                    currentToken = token // Lưu token
+                    val userId = response.body()?.userId
+                    currentToken = token
                     Log.d("LoginToken", "Token: $token, UserId: $userId")
 
                     onResult(true, token, userId)
@@ -34,7 +31,6 @@ class AuthRepository {
                     onResult(false, null, null)
                 }
             }
-
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 onResult(false, null, null)
             }
@@ -74,7 +70,6 @@ class AuthRepository {
                     callback(false, errorMessages)
                 }
             }
-
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Log.e("RegisterFailure", "Network error: ${t.message}")
                 callback(false, listOf("Không thể kết nối đến server: ${t.message}"))

@@ -1,5 +1,6 @@
 package com.example.fashionshopapp.screens
 
+import android.annotation.SuppressLint
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
@@ -17,10 +18,10 @@ fun ProfileOptionCard(
     title: String,
     description: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier // Thêm tham số modifier
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier // Sử dụng modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         onClick = onClick
@@ -36,18 +37,16 @@ fun ProfileOptionCard(
     }
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel, navController: NavController) {
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
-
-    // Giao diện SwipeRefresh
         if (isLoggedIn) {
-            // Nội dung cuộn
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-                    .verticalScroll(rememberScrollState()), // Kéo lên xuống
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -103,10 +102,13 @@ fun ProfileScreen(viewModel: ProfileViewModel, navController: NavController) {
 
                 Button(
                     onClick = { viewModel.logout() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 100.dp)
                 ) {
                     Text("Đăng xuất")
                 }
+
 
             }
         } else {

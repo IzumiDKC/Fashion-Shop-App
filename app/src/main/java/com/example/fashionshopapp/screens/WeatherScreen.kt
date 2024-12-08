@@ -76,7 +76,7 @@ fun WeatherContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Vị trí hiện tại: $city", // $regionName
+                text = "Vị trí hiện tại: $city",
                 style = MaterialTheme.typography.h4,
                 color = Color.White
             )

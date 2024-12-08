@@ -16,24 +16,28 @@ fun CategoryGrid() {
     val categories = listOf(
         CustomCategory(1, "Khuyến mãi", R.drawable.sale),
         CustomCategory(2, "Sản phẩm hot", R.drawable.sale),
-        CustomCategory(3, "Giảm giá", R.drawable.sale) ,
-        CustomCategory(4, "Test 4", R.drawable.sale) ,
+        CustomCategory(3, "Giảm giá", R.drawable.sale),
+        CustomCategory(4, "Test 4", R.drawable.sale),
         CustomCategory(5, "Test 5", R.drawable.sale),
         CustomCategory(6, "Test 6", R.drawable.sale),
-        CustomCategory(7, "Test 7", R.drawable.sale),
-        CustomCategory(8, "Test 8", R.drawable.sale),
-        CustomCategory(9, "Test 9", R.drawable.sale),
-        CustomCategory(10, "Test ", R.drawable.sale),
     )
 
-    Column(modifier = Modifier.fillMaxWidth()) {
-        categories.chunked(5).forEach { rowItems ->
-            Row(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        categories.chunked(3).forEach { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
                 rowItems.forEach { category ->
                     CustomCategoryItemView(
                         category = category,
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(1f, fill = true)
                             .padding(4.dp)
                     )
                 }
@@ -51,13 +55,14 @@ fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifi
         Image(
             painter = painterResource(id = category.iconUrl),
             contentDescription = category.name,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(30.dp) // Tăng kích thước ảnh cho rõ hơn
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = category.name,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             color = Color.Black
         )
     }
 }
+

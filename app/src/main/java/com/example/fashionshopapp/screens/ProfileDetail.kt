@@ -68,10 +68,11 @@ fun ProfileDetail(viewModel: ProfileViewModel, navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Update Button
                 Button(
                     onClick = {
-                        navController.navigate("updateProfile/${viewModel.userId}") },
+                        navController.navigate("updateProfile/${viewModel.userId}")
+                    },
+
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp)
