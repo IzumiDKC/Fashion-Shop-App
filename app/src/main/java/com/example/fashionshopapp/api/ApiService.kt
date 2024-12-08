@@ -32,9 +32,6 @@ interface ApiService {
     @POST("api/auth/register")
     fun register(@Body registerRequest: RegisterRequest): Call<Void>
 
-    @POST("api/orders/create")
-    fun createOrder(@Body request: CreateOrderRequest): Response<Order>
-
     @GET("api/account/profile/{userId}")
     suspend fun getProfile(@Path("userId") userId: String): Response<UserProfile>
 
@@ -43,16 +40,9 @@ interface ApiService {
         @Path("userId") userId: String,
         @Body updatedProfile: UpdatedProfileModel
     ): Response<Void>
-    /* @GET("api/account/profile")
-    suspend fun getProfile(
-        @Header("Authorization") token: String
-    ): Response<UserProfile>
 
-     @PUT("api/account/update-profile")
-     suspend fun updateProfile(
-         @Header("Authorization") token: String,
-         @Body updatedProfile: UpdatedProfileModel
-     ): Response<Void>*/
+    @GET("user-orders/{userId}")
+    suspend fun getUserOrders(@Path("userId") userId: String): Response<List<Order>>
 
 
 }

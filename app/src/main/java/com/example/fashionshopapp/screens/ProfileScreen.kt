@@ -70,9 +70,10 @@ fun ProfileScreen(viewModel: ProfileViewModel, navController: NavController) {
                     title = "Lịch sử đơn hàng",
                     description = "Xem lại các đơn hàng đã đặt.",
                     onClick = {
-                        // TODO: Chuyển sang màn hình lịch sử đơn hàng
+                        navController.navigate("history_order")
                     }
                 )
+
                 ProfileOptionCard(
                     title = "Quản lý địa chỉ",
                     description = "Cập nhật hoặc thêm địa chỉ mới.",

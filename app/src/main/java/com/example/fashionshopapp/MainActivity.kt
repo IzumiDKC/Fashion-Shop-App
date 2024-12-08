@@ -34,6 +34,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.CheckoutScreen
+import com.example.fashionshopapp.screens.HistoryOrderScreen
 import com.example.fashionshopapp.screens.LoginScreen
 import com.example.fashionshopapp.screens.ProfileDetail
 import com.example.fashionshopapp.viewmodel.CartViewModel
@@ -137,6 +138,9 @@ fun NavigationGraph(navController: NavHostController) {
                 },
                 onBack = { navController.popBackStack() }
             )
+        }
+        composable("history_order") {
+            HistoryOrderScreen()
         }
         composable("profile_detail") {
             ProfileDetail(viewModel = profileViewModel, navController = navController)
