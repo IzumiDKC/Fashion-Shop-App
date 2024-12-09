@@ -19,16 +19,22 @@ import CategoryGrid
 import ProductScreen
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.rounded.WbSunny
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -82,7 +88,7 @@ fun BottomNavigationBar(navController: NavHostController) {
             BottomNavigationItem(
                 icon = { Icon(screen.icon, contentDescription = null) },
                 label = { Text(screen.title) },
-                selected = false,  // Cập nhật nếu có trạng thái selected
+                selected = false,
                 onClick = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
@@ -162,12 +168,53 @@ fun NavigationGraph(navController: NavHostController) {
 
 @Composable
 fun HomeScreen(cartViewModel: CartViewModel = viewModel()) {
+    var searchText by remember { mutableStateOf("") }
+
     AppBackground {
         Column(modifier = Modifier.fillMaxSize()) {
             BannerCarousel()
             CategoryGrid()
-            Spacer(modifier = Modifier.height(16.dp))
-            ProductScreen(onAddToCart = { product -> cartViewModel.addToCart(product) })
+            SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
+            ProductScreen(searchText = searchText, onAddToCart = { product -> cartViewModel.addToCart(product) })
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBar(searchText: String, onSearchTextChange: (String) -> Unit) {
+    TextField(
+        value = searchText,
+        onValueChange = { onSearchTextChange(it) },
+        label = { Text("Tìm tên quần áo") },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                tint = Color.Gray
+            )
+        },
+        textStyle = androidx.compose.ui.text.TextStyle(
+            fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Start
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .background(Color(0xFFF1F1F1), shape = MaterialTheme.shapes.medium)
+            .height(56.dp)
+            .padding(start = 16.dp, end = 16.dp),
+        singleLine = true,
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color(0xFFF1F1F1),
+            focusedLabelColor = Color.Black,
+            unfocusedLabelColor = Color.Gray,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+}
+
+

@@ -31,17 +31,15 @@ import com.example.fashionshopapp.repository.CategoryRepository
 import com.example.fashionshopapp.utils.AppBackground
 
 @Composable
-fun ProductScreen(onAddToCart: (Product) -> Unit) {
+fun ProductScreen(searchText: String, onAddToCart: (Product) -> Unit) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
-    var searchText by remember { mutableStateOf("") }
     var successMessage by remember { mutableStateOf<String?>(null) }
 
     val productRepository = ProductRepository()
     val brandRepository = BrandRepository()
     val categoryRepository = CategoryRepository()
-
 
     LaunchedEffect(Unit) {
         products = productRepository.fetchProducts()
@@ -52,8 +50,6 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
     AppBackground {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
-
                 val filteredProducts = products.filter {
                     it.name.contains(searchText, ignoreCase = true)
                 }
@@ -99,6 +95,7 @@ fun ProductScreen(onAddToCart: (Product) -> Unit) {
         }
     }
 }
+
 
 
 

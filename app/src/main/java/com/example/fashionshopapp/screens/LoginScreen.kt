@@ -3,9 +3,14 @@ package com.example.fashionshopapp.screens
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
@@ -14,6 +19,7 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginError by remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }  
 
     Column(
         modifier = Modifier
@@ -27,13 +33,24 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Mật khẩu") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(), // Toggle password visibility
+            trailingIcon = {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                    )
+                }
+            }
         )
         Spacer(modifier = Modifier.height(8.dp))
+
         Button(
             onClick = {
                 viewModel.login(username, password) { loginSuccess ->
@@ -42,6 +59,7 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
                             popUpTo("login") { inclusive = true }
                         }
                     } else {
+                        loginError = true
                     }
                 }
             },
@@ -52,9 +70,10 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
         }
 
         if (loginError) {
-            Text("Đăng nhập tất bạo. Voi lòng thử lại!", color = MaterialTheme.colorScheme.error)
+            Text("Đăng nhập thất bại. Vui lòng thử lại!", color = MaterialTheme.colorScheme.error)
         }
         Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             "Nếu chưa có tài khoản, đăng ký tại đây",
             color = MaterialTheme.colorScheme.primary,
@@ -64,4 +83,5 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
         )
     }
 }
+
 
