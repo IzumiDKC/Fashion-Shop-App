@@ -1,4 +1,5 @@
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -8,11 +9,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.fashionshopapp.R
 import com.example.fashionshopapp.models.CustomCategory
 
 @Composable
-fun CategoryGrid() {
+fun CategoryGrid(navController: NavController) {
     val categories = listOf(
         CustomCategory(1, "Khuyến mãi", R.drawable.sale),
         CustomCategory(2, "Sản phẩm hot", R.drawable.sale),
@@ -38,7 +40,8 @@ fun CategoryGrid() {
                         category = category,
                         modifier = Modifier
                             .weight(1f, fill = true)
-                            .padding(4.dp)
+                            .padding(4.dp),
+                        navController = navController
                     )
                 }
             }
@@ -46,8 +49,9 @@ fun CategoryGrid() {
     }
 }
 
+
 @Composable
-fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifier) {
+fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifier, navController: NavController) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -55,14 +59,21 @@ fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifi
         Image(
             painter = painterResource(id = category.iconUrl),
             contentDescription = category.name,
-            modifier = Modifier.size(30.dp) // Tăng kích thước ảnh cho rõ hơn
+            modifier = Modifier.size(30.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = category.name,
             fontSize = 14.sp,
-            color = Color.Black
+            color = Color.Black,
+            modifier = Modifier.clickable {
+                if (category.name == "Khuyến mãi") {
+                    // Điều hướng đến SaleScreen khi nhấn vào "Khuyến mãi"
+                    navController.navigate("sale_screen")
+                }
+            }
         )
     }
 }
+
 

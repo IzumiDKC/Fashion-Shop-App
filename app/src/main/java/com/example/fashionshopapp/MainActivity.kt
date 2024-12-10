@@ -19,22 +19,38 @@ import CategoryGrid
 import ProductScreen
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.rounded.WbSunny
+import android.Manifest
+import android.os.Looper
+import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -46,6 +62,7 @@ import com.example.fashionshopapp.screens.ProfileDetail
 import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.screens.ProfileScreen
 import com.example.fashionshopapp.screens.RegisterScreen
+import com.example.fashionshopapp.screens.SaleScreen
 import com.example.fashionshopapp.screens.UpdateProfile
 import com.example.fashionshopapp.screens.WeatherScreen
 
@@ -116,7 +133,7 @@ fun NavigationGraph(navController: NavHostController) {
     val cartViewModel = viewModel<CartViewModel>()
 
     NavHost(navController, startDestination = Screen.Home.route) {
-        composable(Screen.Home.route) { HomeScreen(cartViewModel) }
+        composable(Screen.Home.route) { HomeScreen(cartViewModel, navController) }
         composable(Screen.Weather.route) { WeatherScreen() }
 
         composable(Screen.Cart.route) { CartScreen(navController, cartViewModel, profileViewModel = profileViewModel) }
@@ -159,7 +176,9 @@ fun NavigationGraph(navController: NavHostController) {
                 navController.popBackStack(Screen.Home.route, false)
             }
         }
-
+        composable("sale_screen") {
+            SaleScreen(onBack = { navController.popBackStack() })
+        }
 
 
 
@@ -167,13 +186,13 @@ fun NavigationGraph(navController: NavHostController) {
 }
 
 @Composable
-fun HomeScreen(cartViewModel: CartViewModel = viewModel()) {
+fun HomeScreen(cartViewModel: CartViewModel = viewModel(), navController: NavHostController) {
     var searchText by remember { mutableStateOf("") }
 
     AppBackground {
         Column(modifier = Modifier.fillMaxSize()) {
             BannerCarousel()
-            CategoryGrid()
+            CategoryGrid(navController = navController)
             SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
             ProductScreen(searchText = searchText, onAddToCart = { product -> cartViewModel.addToCart(product) })
         }
@@ -183,8 +202,47 @@ fun HomeScreen(cartViewModel: CartViewModel = viewModel()) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(searchText: String, onSearchTextChange: (String) -> Unit) {
+    val context = LocalContext.current
+    var isListening by remember { mutableStateOf(false) }
+    var recognitionResult by remember { mutableStateOf("") }
+    var showError by remember { mutableStateOf(false) }
+
+    if (isListening) {
+        Dialog(onDismissRequest = { isListening = false }) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xAA000000)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = Icons.Default.Mic,
+                        contentDescription = "Listening",
+                        tint = Color.White,
+                        modifier = Modifier.size(100.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "Đang nghe...", color = Color.White, fontSize = 18.sp)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = {
+                        isListening = false
+                        recognitionResult = ""
+                    }) {
+                        Text("Hủy")
+                    }
+                }
+            }
+        }
+    }
+
+    if (showError) {
+        Toast.makeText(context, "Không tìm thấy âm thanh", Toast.LENGTH_SHORT).show()
+        showError = false
+    }
+
     TextField(
-        value = searchText,
+        value = if (recognitionResult.isEmpty()) searchText else recognitionResult,
         onValueChange = { onSearchTextChange(it) },
         label = { Text("Tìm tên quần áo") },
         leadingIcon = {
@@ -193,6 +251,30 @@ fun SearchBar(searchText: String, onSearchTextChange: (String) -> Unit) {
                 contentDescription = "Search",
                 tint = Color.Gray
             )
+        },
+        trailingIcon = {
+            IconButton(onClick = {
+                requestMicrophonePermission(context) { isGranted ->
+                    if (isGranted) {
+                        recognitionResult = ""
+                        isListening = true
+                        startSpeechRecognition(context, onResult = { result ->
+                            isListening = false
+                            recognitionResult = result
+                            onSearchTextChange(result)
+                        }, onTimeout = {
+                            isListening = false
+                            showError = true
+                        })
+                    }
+                }
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Mic,
+                    contentDescription = "Microphone",
+                    tint = Color.Gray
+                )
+            }
         },
         textStyle = androidx.compose.ui.text.TextStyle(
             fontFamily = FontFamily.Default,
@@ -216,5 +298,77 @@ fun SearchBar(searchText: String, onSearchTextChange: (String) -> Unit) {
         )
     )
 }
+fun requestMicrophonePermission(context: Context, callback: (Boolean) -> Unit) {
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(
+            context as Activity,
+            arrayOf(Manifest.permission.RECORD_AUDIO),
+            1 // Mã yêu cầu
+        )
+        callback(false)
+    } else {
+        callback(true)
+    }
+}
+
+fun startSpeechRecognition(
+    context: Context,
+    onResult: (String) -> Unit,
+    onTimeout: () -> Unit
+) {
+    val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, "vi-VN")
+    }
+
+    val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
+    val handler = android.os.Handler(Looper.getMainLooper())
+    var isResultReceived = false
+
+    recognizer.setRecognitionListener(object : RecognitionListener {
+        override fun onReadyForSpeech(params: Bundle?) {}
+
+        override fun onBeginningOfSpeech() {}
+
+        override fun onRmsChanged(rmsdB: Float) {}
+
+        override fun onBufferReceived(buffer: ByteArray?) {}
+
+        override fun onEndOfSpeech() {}
+
+        override fun onError(error: Int) {
+            if (!isResultReceived) {
+                onTimeout()
+            }
+        }
+
+        override fun onResults(results: Bundle?) {
+            isResultReceived = true
+            handler.removeCallbacksAndMessages(null)
+            val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+            if (!matches.isNullOrEmpty()) {
+                onResult(matches[0])
+            } else {
+                onTimeout()
+            }
+        }
+
+        override fun onPartialResults(partialResults: Bundle?) {}
+
+        override fun onEvent(eventType: Int, params: Bundle?) {}
+    })
+
+    handler.postDelayed({
+        if (!isResultReceived) {
+            recognizer.stopListening()
+            onTimeout()
+        }
+    }, 3000)
+
+    recognizer.startListening(intent)
+}
+
+
+
 
 

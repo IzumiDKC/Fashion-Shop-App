@@ -41,6 +41,9 @@ interface ApiService {
         @Body updatedProfile: UpdatedProfileModel
     ): Response<Void>
 
+    @GET("onsale")
+    fun getProductsOnSale(): Call<List<Product>>
+
     @GET("user-orders/{userId}")
     suspend fun getUserOrders(@Path("userId") userId: String): Response<List<Order>>
 
