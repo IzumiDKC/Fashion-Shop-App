@@ -36,7 +36,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 
 @Composable
-fun SaleScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit) {
+fun SaleScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit, description: String) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
@@ -98,6 +98,14 @@ fun SaleScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit) {
                     )
                 }
 
+                // Hiển thị phần mô tả bên dưới nút "Quay lại"
+                Text(
+                    text = description,
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+
                 products.forEach { product ->
                     ProductItem(
                         product = product,
@@ -138,6 +146,7 @@ fun SaleScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit) {
         }
     }
 }
+
 
 
 

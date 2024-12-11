@@ -125,6 +125,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Weather : Screen("weather", "Gợi Ý", Icons.Rounded.WbSunny)
     object Cart : Screen("cart", "Giỏ Hàng", Icons.Default.ShoppingCart)
     object Profile : Screen("profile", "Hồ Sơ", Icons.Default.Person)
+
 }
 
 @Composable
@@ -134,6 +135,7 @@ fun NavigationGraph(navController: NavHostController) {
 
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) { HomeScreen(cartViewModel, navController) }
+
         composable(Screen.Weather.route) { WeatherScreen() }
 
         composable(Screen.Cart.route) { CartScreen(navController, cartViewModel, profileViewModel = profileViewModel) }
@@ -141,9 +143,11 @@ fun NavigationGraph(navController: NavHostController) {
         composable(Screen.Profile.route) {
             ProfileScreen(viewModel = profileViewModel, navController = navController)
         }
+
         composable("login") {
             LoginScreen(viewModel = profileViewModel, navController = navController)
         }
+
         composable("register") {
             RegisterScreen(viewModel = profileViewModel, navController = navController)
         }
@@ -176,17 +180,20 @@ fun NavigationGraph(navController: NavHostController) {
                 navController.popBackStack(Screen.Home.route, false)
             }
         }
-        composable("sale_screen") {
+        composable(
+            "sale_screen/{description}",
+            arguments = listOf(navArgument("description") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val description = backStackEntry.arguments?.getString("description") ?: ""
+
             SaleScreen(
                 onBack = { navController.popBackStack() },
                 onAddToCart = { product ->
                     cartViewModel.addToCart(product)
-                }
+                },
+                description = description
             )
         }
-
-
-
 
     }
 }
@@ -309,7 +316,7 @@ fun requestMicrophonePermission(context: Context, callback: (Boolean) -> Unit) {
         ActivityCompat.requestPermissions(
             context as Activity,
             arrayOf(Manifest.permission.RECORD_AUDIO),
-            1 // Mã yêu cầu
+            1
         )
         callback(false)
     } else {

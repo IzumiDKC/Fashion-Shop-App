@@ -30,7 +30,6 @@ fun BannerCarousel() {
     val pagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
 
-    // Tự động cuộn
     LaunchedEffect(Unit) {
         while (true) {
             delay(3000) // Chuyển hình mỗi 3 giây

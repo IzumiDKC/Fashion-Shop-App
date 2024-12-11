@@ -24,7 +24,6 @@ class ProfileViewModel : ViewModel() {
     var userId by mutableStateOf<String?>(null)
     var token by mutableStateOf<String?>(null)
 
-
     fun getProfile(onResult: (UserProfile?) -> Unit) {
         val userId = this.userId
         if (userId != null) {
@@ -61,9 +60,6 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
-
-
-
     fun login(username: String, password: String, onLoginResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             repository.login(username, password) { success, token, userId ->
@@ -80,7 +76,6 @@ class ProfileViewModel : ViewModel() {
             }
         }
     }
-
 
     fun logout() {
         _isLoggedIn.value = false

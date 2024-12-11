@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,35 +37,51 @@ fun ProductScreen(searchText: String, onAddToCart: (Product) -> Unit) {
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
     var successMessage by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(true) } // Trạng thái tải dữ liệu
 
     val productRepository = ProductRepository()
     val brandRepository = BrandRepository()
     val categoryRepository = CategoryRepository()
 
     LaunchedEffect(Unit) {
+        isLoading = true
         products = productRepository.fetchProducts()
         brands = brandRepository.fetchBrands()
         categories = categoryRepository.fetchCategories()
+        isLoading = false
     }
 
     AppBackground {
         Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                val filteredProducts = products.filter {
-                    it.name.contains(searchText, ignoreCase = true)
+            if (isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator(color = Color.Gray)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text("Đang tải sản phẩm, vui lòng chờ trong giây lát", color = Color.Gray)
+                    }
                 }
+            } else {
+                Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                    val filteredProducts = products.filter {
+                        it.name.contains(searchText, ignoreCase = true)
+                    }
 
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(filteredProducts) { product ->
-                        ProductItem(
-                            product = product,
-                            brands = brands,
-                            categories = categories,
-                            onAddToCart = {
-                                onAddToCart(product)
-                                successMessage = "Đã thêm ${product.name} vào giỏ hàng!"
-                            }
-                        )
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(filteredProducts) { product ->
+                            ProductItem(
+                                product = product,
+                                brands = brands,
+                                categories = categories,
+                                onAddToCart = {
+                                    onAddToCart(product)
+                                    successMessage = "Đã thêm ${product.name} vào giỏ hàng!"
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -95,6 +112,7 @@ fun ProductScreen(searchText: String, onAddToCart: (Product) -> Unit) {
         }
     }
 }
+
 
 
 
