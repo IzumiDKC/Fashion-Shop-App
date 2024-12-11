@@ -34,9 +34,8 @@ fun CartScreen(
     navController: NavController,
     cartViewModel: CartViewModel = viewModel(),
     profileViewModel: ProfileViewModel = viewModel()
-
 ) {
-    val cartItems = cartViewModel.cartItems
+    val cartItems by cartViewModel.cartItems.collectAsState()
     val isLoggedIn by profileViewModel.isLoggedIn.collectAsState()
     var showLoginDialog by remember { mutableStateOf(false) }
 
@@ -87,6 +86,7 @@ fun CartScreen(
             }
         }
     }
+
     if (showLoginDialog) {
         AlertDialog(
             onDismissRequest = { showLoginDialog = false },
@@ -112,6 +112,7 @@ fun CartScreen(
         )
     }
 }
+
 
 
 

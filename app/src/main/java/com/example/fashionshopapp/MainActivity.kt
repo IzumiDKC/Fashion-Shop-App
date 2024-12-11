@@ -177,8 +177,14 @@ fun NavigationGraph(navController: NavHostController) {
             }
         }
         composable("sale_screen") {
-            SaleScreen(onBack = { navController.popBackStack() })
+            SaleScreen(
+                onBack = { navController.popBackStack() },
+                onAddToCart = { product ->
+                    cartViewModel.addToCart(product)
+                }
+            )
         }
+
 
 
 
@@ -363,7 +369,7 @@ fun startSpeechRecognition(
             recognizer.stopListening()
             onTimeout()
         }
-    }, 3000)
+    }, 5000)
 
     recognizer.startListening(intent)
 }
