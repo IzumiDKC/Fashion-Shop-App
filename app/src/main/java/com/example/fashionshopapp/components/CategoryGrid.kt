@@ -67,12 +67,13 @@ fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifi
             fontSize = 14.sp,
             color = Color.Black,
             modifier = Modifier.clickable {
-                if (category.name == "Khuyến mãi") {
-                    // Điều hướng đến SaleScreen khi nhấn vào "Khuyến mãi"
-                    navController.navigate("sale_screen/${category.description}")
+                when (category.name) {
+                    "Khuyến mãi" -> navController.navigate("sale_screen/${category.description}")
+                    "Sản phẩm hot" -> navController.navigate("hot_screen/${category.description}")
                 }
             }
         )
+
     }
 }
 

@@ -44,6 +44,9 @@ interface ApiService {
     @GET("onsale")
     fun getProductsOnSale(): Call<List<Product>>
 
+    @GET("hot-products")
+    fun getHotProducts(): Call<List<Product>>
+
     @GET("user-orders/{userId}")
     suspend fun getUserOrders(@Path("userId") userId: String): Response<List<Order>>
 

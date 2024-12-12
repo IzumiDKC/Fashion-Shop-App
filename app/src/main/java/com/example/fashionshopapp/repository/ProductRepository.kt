@@ -33,5 +33,21 @@ class ProductRepository {
             }
         }
     }
+    suspend fun fetchHotProducts(): List<Product> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = RetrofitInstance.api.getHotProducts().execute()
+                if (response.isSuccessful) {
+                    response.body() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+    }
+
+
 
 }

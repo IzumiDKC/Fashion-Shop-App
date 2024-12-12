@@ -21,7 +21,7 @@ fun provideOkHttpClient(context: Context): OkHttpClient {
                     .header(
                         "Cache-Control",
                         "public, only-if-cached, max-stale=604800"
-                    ) // Cache 7 ngày khi không có mạng
+                    )
                     .build()
             }
             chain.proceed(request)
