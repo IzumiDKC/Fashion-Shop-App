@@ -47,7 +47,19 @@ class ProductRepository {
             }
         }
     }
-
-
+    suspend fun fetchFlashSaleProducts(): List<Product> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = RetrofitInstance.api.getFlashSaleProducts().execute()
+                if (response.isSuccessful) {
+                    response.body() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+    }
 
 }

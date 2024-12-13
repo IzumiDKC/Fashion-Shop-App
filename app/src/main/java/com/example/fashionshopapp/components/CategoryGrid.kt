@@ -70,6 +70,8 @@ fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifi
                 when (category.name) {
                     "Khuyến mãi" -> navController.navigate("sale_screen/${category.description}")
                     "Sản phẩm hot" -> navController.navigate("hot_screen/${category.description}")
+                    "Flash Sale" -> navController.navigate("flash_sale_screen/${category.description}")
+
                 }
             }
         )

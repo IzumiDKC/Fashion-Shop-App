@@ -49,16 +49,18 @@ fun HotScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit, description: S
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(
-                    color = Color.Green,
-                    modifier = Modifier.padding(8.dp)
-                )
-                Text(
-                    text = "Đang tải sản phẩm hot...",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Red
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    androidx.compose.material.CircularProgressIndicator(
+                        color = Color.Blue,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    Text(
+                        text = "Đang tải sản phẩm...",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Blue
+                    )
+                }
             }
         } else {
             LazyColumn(
