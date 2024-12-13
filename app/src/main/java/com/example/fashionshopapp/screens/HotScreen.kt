@@ -50,7 +50,7 @@ fun HotScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit, description: S
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    color = Color.Red,
+                    color = Color.Green,
                     modifier = Modifier.padding(8.dp)
                 )
                 Text(
@@ -83,9 +83,13 @@ fun HotScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit, description: S
 
                     Text(
                         text = description,
-                        fontSize = 14.sp,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        fontSize = 20.sp,
+                        color = Color.Magenta,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally)
                     )
                 }
 
