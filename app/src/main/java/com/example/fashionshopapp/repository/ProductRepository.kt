@@ -61,5 +61,18 @@ class ProductRepository {
             }
         }
     }
-
+    suspend fun fetchChristmasCollection(): List<Product> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = RetrofitInstance.api.getChristmasCollection().execute()
+                if (response.isSuccessful) {
+                    response.body() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+    }
 }

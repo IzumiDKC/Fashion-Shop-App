@@ -56,6 +56,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.CheckoutScreen
+import com.example.fashionshopapp.screens.ChristmasCollectionScreen
 import com.example.fashionshopapp.screens.FlashSaleScreen
 import com.example.fashionshopapp.screens.HistoryOrderScreen
 import com.example.fashionshopapp.screens.HotScreen
@@ -214,6 +215,19 @@ fun NavigationGraph(navController: NavHostController) {
         ) { backStackEntry ->
             val description = backStackEntry.arguments?.getString("description") ?: ""
             FlashSaleScreen(
+                onBack = { navController.popBackStack() },
+                onAddToCart = { product ->
+                    cartViewModel.addToCart(product)
+                },
+                description = description
+            )
+        }
+        composable(
+            "christmas_collection_screen/{description}",
+            arguments = listOf(navArgument("description") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val description = backStackEntry.arguments?.getString("description") ?: ""
+            ChristmasCollectionScreen(
                 onBack = { navController.popBackStack() },
                 onAddToCart = { product ->
                     cartViewModel.addToCart(product)

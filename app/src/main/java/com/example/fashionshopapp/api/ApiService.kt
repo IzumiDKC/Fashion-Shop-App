@@ -50,6 +50,8 @@ interface ApiService {
     @GET("hot-products-time-remaining")
     fun getFlashSaleProducts(): Call<List<Product>>
 
+    @GET("christmas-collection")
+    fun getChristmasCollection(): Call<List<Product>>
 
     @GET("user-orders/{userId}")
     suspend fun getUserOrders(@Path("userId") userId: String): Response<List<Order>>
