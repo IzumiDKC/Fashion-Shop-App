@@ -98,13 +98,16 @@
 
 ## Tuần 11: 09/12 – 15/12/2024
 - **Cập nhật database:**
-  - Nội dung ngày: 13/12/2024 [UpdatedDb](https://anotepad.com/notes/d4drqwsk)
-  - Nội dung ngày: 14/12/2024: [UpdatedDb](https://anotepad.com/notes/qymb4sh9)
+  - Nội dung ngày 13/12/2024: [UpdatedDb](https://anotepad.com/notes/d4drqwsk)
+  - Nội dung ngày 14/12/2024:
+    +  [UpdatedDb](https://anotepad.com/notes/qymb4sh9)
+    + Cải thiện truy vấn ở giữa 2 Table Products và Brands tại [đây](https://github.com/IzumiDKC/Fashion-Shop)
 - **Cải thiện code**
 - **Xây dựng API cùng các trang CategoryGrid**
   - CategoryGrid-Sale: 10/12/2024
   - CategoryGrid-Hot: 12/12/2024
   - CategoryGrid-FlashSale: 13/12/2024
+  - CategoryGrid-ChristmasCollection: 14/12/2024
 ---
 
 ## Tuần 12: 16/12 – 22/12/2024
