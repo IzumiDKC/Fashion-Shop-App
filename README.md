@@ -97,16 +97,16 @@
 ---
 
 ## Tuần 11: 09/12 – 15/12/2024
-- **Kiểm tra tích hợp:**
-  - Test toàn bộ hệ thống và ghi nhận lỗi còn tồn đọng.
-  - Cải thiện hiệu năng các API.
-
+- **Cập nhật database:**
+  - Nội dung ngày: 13/12/2024 [UpdatedDb](https://anotepad.com/notes/d4drqwsk)
+  - Nội dung ngày: 14/12/2024: [UpdatedDb](https://anotepad.com/notes/qymb4sh9)
+- **Cải thiện code**
+- **Xây dựng API cùng các trang CategoryGrid**
+  - CategoryGrid-Sale: 10/12/2024
+  - CategoryGrid-Hot: 12/12/2024
+  - CategoryGrid-FlashSale: 13/12/2024
 ---
 
 ## Tuần 12: 16/12 – 22/12/2024
-- **Hoàn thiện dự án:**
-  - Fix các lỗi còn lại.
-  - Đóng gói và chuẩn bị tài liệu báo cáo.
-  - Triển khai demo sản phẩm cuối cùng.
 
 ---
