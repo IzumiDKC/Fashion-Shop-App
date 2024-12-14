@@ -1,6 +1,6 @@
 # Update Log
 
-## Thời gian thực hiện đồ án: 30/09/2024 – 22/12/2024 (12 tuần)
+## Thời gian thực hiện đồ án: 30/09/2024 – ?/12/2024
 
 ---
 
