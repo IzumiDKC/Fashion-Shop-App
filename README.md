@@ -1,80 +1,112 @@
 # Update Log
 
-## Overview
-Ghi lại các thay đổi, sửa lỗi, và cập nhật tính năng qua từng phiên bản.
+## Thời gian thực hiện đồ án: 30/09/2024 – 22/12/2024 (12 tuần)
 
 ---
 
-## Changelog
-
-### 10/11/2024
-- **Cải tiến Codebase**
-  - Tối ưu hóa `Program.cs`:
-    - Thay `UseEndpoints` bằng `app.MapControllerRoute` và `app.MapRazorPages` (theo phiên bản mới .NET).
-  - Sắp xếp lại middleware:
-    - `UseCors`, `UseSession`, `UseAuthentication` theo thứ tự hợp lý trong pipeline ASP.NET Core.
-
-- **Xây dựng AuthController**
-  - Tạo 3 API cơ bản:
-    - **Đăng xuất:** Hoạt động bình thường.
-    - **Đăng ký:** Lỗi – Cột `FullName` không thể NULL.
-      - Giải pháp:
-        1. Gán `FullName = ""` và cập nhật migrations – **Thất bại**.
-        2. Thêm `FullName` vào Register Model, cập nhật API Register – **Thành công**.
-    - **Đăng nhập:** Lỗi – Vấn đề chuỗi null trong `Encoding.UTF8.GetBytes()`.
-      - Cấu hình lại `Jwt` với khóa ngẫu nhiên thay vì lưu tĩnh trong `appsettings.json`.
-      - Điều chỉnh hàm `GenerateJwtToken` để tạo khóa 256-bit – **Thành công**.
+## Tuần 1: 30/09 – 06/10/2024
+- **Khởi động dự án:**
+  - Xây dựng cấu trúc cơ bản cho dự án.
+  - Thiết lập môi trường phát triển (ASP.NET Core, Android Compose, Swagger).
+  - Lên kế hoạch cho các tính năng chính: Products, Category, Brand.
 
 ---
 
-### 11/11/2024
-- **Thêm thư viện Compose Navigation.**
-- Tích hợp **BottomNavigationBar** với:
-  - 4 màn hình điều hướng.
-  - Tùy chỉnh màu nền.
+## Tuần 2: 07/10 – 13/10/2024
+- **Tạo các API cơ bản:**
+  - Tạo API cho Products, Category, Brand.
+  - Test API trên Swagger – **Hoàn thành.**
+- **Thiết kế giao diện cơ bản:**
+  - Bắt đầu xây dựng giao diện với Android Compose.
 
 ---
 
-### 12-13/11/2024
-- **Giao diện Trang chủ**:
-  - Hiển thị giá trị khuyến mãi khi có.
-  - Sửa lỗi hiển thị màu giá.
-- **Cải tiến ProfileScreen**:
-  - Tách ProfileScreen thành một class riêng.
-  - Demo thành công giao diện hồ sơ.
+## Tuần 3: 14/10 – 20/10/2024
+- **Tích hợp Swagger vào project.**
+- Tối ưu giao diện:
+  - Cải tiến cấu trúc BottomNavigationBar.
+  - Điều hướng giữa các màn hình cơ bản.
 
 ---
 
-### 16-20/11/2024
-#### 16/11/2024
-- Xây dựng chức năng **đăng ký**:
-  - Tạo màn hình `RegisterScreen`.
-  - Kết nối API `@POST("api/auth/register")`.
-  - Test lỗi:
-    - **Thất bại:** Giao diện không hiển thị thông báo lỗi rõ ràng.
-    - **Giải pháp:** Xây dựng UI hiển thị lỗi cho người dùng.
-
-#### 20/11/2024
-- Fix bug giỏ hàng nhưng không thành công.
-- **Quyết định:** Bỏ toàn bộ code cũ, rabase về nhánh `Register-V1`, và code lại toàn bộ giỏ hàng – **Thành công.**
+## Tuần 4: 21/10 – 27/10/2024
+- **Xây dựng các API liên quan đến người dùng:**
+  - Tạo AuthController với 3 API cơ bản: Login, Register, Logout.
+- **Test API:**
+  - **Login:** Gặp lỗi JWT (chuỗi null).
+  - **Register:** Lỗi cột `FullName` không cho phép NULL.
+- **Fix lỗi:**
+  - Cấu hình `Jwt` với khóa ngẫu nhiên.
+  - Thêm `FullName` vào Register Model – **Thành công.**
 
 ---
 
-### 22-30/11/2024
-#### 22/11/2024
-- Chỉnh sửa logic giảm giá trong giỏ hàng.
-- Bỏ các thuộc tính dư thừa để dễ nhận diện dữ liệu.
-
-#### 30/11/2024
-- Tích hợp [Open Weather API](https://openweathermap.org/) và [ip-api](http://ip-api.com/json/).
-- Tạo giao diện **WeatherScreen** hiển thị lời khuyên theo thời tiết hiện tại.
+## Tuần 5: 28/10 – 03/11/2024
+- Tối ưu code trong `Program.cs`.
+- Sắp xếp middleware theo thứ tự hợp lý:
+  - `UseCors`, `UseSession`, `UseAuthentication`.
+- **Thiết kế UI:**
+  - Cải tiến giao diện `HomeScreen` (hiển thị giá trị khuyến mãi, fix lỗi hiển thị màu giá).
 
 ---
 
-### 1-5/12/2024
-- **1-3/12/2024**:
-  - Thêm **ProfileDetail** screen (ban đầu chỉ get thông tin bằng `UserID`).
-  - Sửa lỗi, thêm tính năng PUT để cập nhật thông tin hồ sơ – **Thành công.**
+## Tuần 6: 04/11 – 10/11/2024
+- **Phát triển ProfileScreen:**
+  - Tách `ProfileScreen` thành class riêng.
+  - Demo giao diện hồ sơ cơ bản – **Hoàn thành.**
+- **Tối ưu hóa giao diện:**
+  - Thêm BottomNavigationBar với 4 màn hình điều hướng.
+  - Tùy chỉnh màu nền BottomNavigationBar.
 
-- **4-5/12/2024**:
-  - Xóa thư viện Firebase dư thừa.
+---
+
+## Tuần 7: 11/11 – 17/11/2024
+- **Phát triển chức năng Đăng ký:**
+  - Tạo `RegisterScreen` và kết nối API `@POST("api/auth/register")`.
+  - Fix lỗi giao diện đăng ký không hiển thị lỗi rõ ràng.
+  - Hoàn thiện đăng ký – **Thành công.**
+- **Giỏ hàng:**
+  - Thêm giỏ hàng vào Navigation, nhưng gặp lỗi reset dữ liệu khi chuyển giữa các trang.
+
+---
+
+## Tuần 8: 18/11 – 24/11/2024
+- **Fix bug giỏ hàng:**
+  - Bỏ toàn bộ code cũ, rabase về nhánh `Register-V1` và code lại từ đầu – **Thành công.**
+- **Cập nhật logic giảm giá:**
+  - Bỏ các thuộc tính dư thừa.
+  - Điều chỉnh định dạng giá trị (`.3f`) để dễ dàng nhận diện.
+
+---
+
+## Tuần 9: 25/11 – 01/12/2024
+- **Tích hợp Open Weather API:**
+  - Kết nối OpenWeather và ip-api để lấy tọa độ.
+  - Hiển thị lời khuyên dựa trên thời tiết hiện tại.
+- **Thiết kế WeatherScreen:**
+  - Tạo giao diện hiển thị thông tin thời tiết.
+
+---
+
+## Tuần 10: 02/12 – 08/12/2024
+- **Cải thiện ProfileDetail:**
+  - Thêm tính năng PUT để cập nhật thông tin cá nhân – **Hoàn thành.**
+- **Tối ưu Firebase:**
+  - Xóa các thư viện Firebase dư thừa.
+
+---
+
+## Tuần 11: 09/12 – 15/12/2024
+- **Kiểm tra tích hợp:**
+  - Test toàn bộ hệ thống và ghi nhận lỗi còn tồn đọng.
+  - Cải thiện hiệu năng các API.
+
+---
+
+## Tuần 12: 16/12 – 22/12/2024
+- **Hoàn thiện dự án:**
+  - Fix các lỗi còn lại.
+  - Đóng gói và chuẩn bị tài liệu báo cáo.
+  - Triển khai demo sản phẩm cuối cùng.
+
+---
