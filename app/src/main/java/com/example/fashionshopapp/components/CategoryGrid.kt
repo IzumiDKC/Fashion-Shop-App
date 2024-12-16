@@ -19,9 +19,9 @@ fun CategoryGrid(navController: NavController) {
         CustomCategory(1, "Khuyến mãi", R.drawable.sale_25339, "Các sản phẩm được giảm giá"),
         CustomCategory(2, "Sản phẩm hot", R.drawable.hot, "Những sản phẩm đang được yêu thích"),
         CustomCategory(3, "Flash Sale", R.drawable.flashsale, "Các sản phẩm chỉ giảm giá trong thời gian giới hạn, đừng bỏ lỡ!"),
-        CustomCategory(4, "Phụ kiện độc đáo", R.drawable.accessory, "Khám phá những phụ kiện tinh tế để làm nổi bật phong cách của bạn."),
-        CustomCategory(5, "BST Giáng Sinh", R.drawable.noel, "Những sản phẩm độc quyền, mang đậm không khí lễ hội."),
-        CustomCategory(6, "Hàng mới về", R.drawable.newarrival2, "Khám phá các sản phẩm mới nhất vừa về, làm mới tủ đồ của bạn với những xu hướng mới.")
+        CustomCategory(4, "Phụ kiện độc đáo", R.drawable.accessory, "Khám phá những phụ kiện tinh tế để làm nổi bật phong cách của bạn"),
+        CustomCategory(5, "BST Giáng Sinh", R.drawable.noel, "Những sản phẩm độc quyền, mang đậm không khí lễ hội"),
+        CustomCategory(6, "Hàng mới về", R.drawable.newarrival2, "Khám phá các sản phẩm mới nhất vừa về, làm mới tủ đồ của bạn với những xu hướng mới")
     )
 
     Column(
@@ -71,9 +71,9 @@ fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifi
                     "Khuyến mãi" -> navController.navigate("sale_screen/${category.description}")
                     "Sản phẩm hot" -> navController.navigate("hot_screen/${category.description}")
                     "Flash Sale" -> navController.navigate("flash_sale_screen/${category.description}")
-
+                    "Phụ kiện độc đáo" -> navController.navigate("accessory_screen/${category.description}")
                     "BST Giáng Sinh" -> navController.navigate("christmas_collection_screen/${category.description}")
-
+                    "Hàng mới về" -> navController.navigate("new_arrival_screen/${category.description}")
                 }
             }
         )

@@ -54,6 +54,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.fashionshopapp.screens.AccessoryScreen
 import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.CheckoutScreen
 import com.example.fashionshopapp.screens.ChristmasCollectionScreen
@@ -235,7 +236,32 @@ fun NavigationGraph(navController: NavHostController) {
                 description = description
             )
         }
-
+        composable(
+            "accessory_screen/{description}",
+            arguments = listOf(navArgument("description") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val description = backStackEntry.arguments?.getString("description") ?: ""
+            AccessoryScreen(
+                onBack = { navController.popBackStack() },
+                onAddToCart = { product ->
+                    cartViewModel.addToCart(product)
+                },
+                description = description
+            )
+        }
+        composable(
+            "new_arrival_screen/{description}",
+            arguments = listOf(navArgument("description") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val description = backStackEntry.arguments?.getString("description") ?: ""
+            ChristmasCollectionScreen(
+                onBack = { navController.popBackStack() },
+                onAddToCart = { product ->
+                    cartViewModel.addToCart(product)
+                },
+                description = description
+            )
+        }
     }
 }
 
