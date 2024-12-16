@@ -62,6 +62,7 @@ import com.example.fashionshopapp.screens.FlashSaleScreen
 import com.example.fashionshopapp.screens.HistoryOrderScreen
 import com.example.fashionshopapp.screens.HotScreen
 import com.example.fashionshopapp.screens.LoginScreen
+import com.example.fashionshopapp.screens.NewArrivalScreen
 import com.example.fashionshopapp.screens.ProfileDetail
 import com.example.fashionshopapp.viewmodel.CartViewModel
 import com.example.fashionshopapp.screens.ProfileScreen
@@ -254,7 +255,7 @@ fun NavigationGraph(navController: NavHostController) {
             arguments = listOf(navArgument("description") { type = NavType.StringType })
         ) { backStackEntry ->
             val description = backStackEntry.arguments?.getString("description") ?: ""
-            ChristmasCollectionScreen(
+            NewArrivalScreen(
                 onBack = { navController.popBackStack() },
                 onAddToCart = { product ->
                     cartViewModel.addToCart(product)

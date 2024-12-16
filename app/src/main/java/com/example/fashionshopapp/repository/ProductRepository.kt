@@ -90,4 +90,19 @@ class ProductRepository {
             }
         }
     }
+
+    suspend fun fetchNewArrival(): List<Product> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = RetrofitInstance.api.getNewArrival().execute()
+                if (response.isSuccessful) {
+                    response.body() ?: emptyList()
+                } else {
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+    }
 }

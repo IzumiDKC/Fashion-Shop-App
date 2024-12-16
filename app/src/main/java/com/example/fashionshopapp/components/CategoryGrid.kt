@@ -21,7 +21,7 @@ fun CategoryGrid(navController: NavController) {
         CustomCategory(3, "Flash Sale", R.drawable.flashsale, "Các sản phẩm chỉ giảm giá trong thời gian giới hạn, đừng bỏ lỡ!"),
         CustomCategory(4, "Phụ kiện độc đáo", R.drawable.accessory, "Khám phá những phụ kiện tinh tế để làm nổi bật phong cách của bạn"),
         CustomCategory(5, "BST Giáng Sinh", R.drawable.noel, "Những sản phẩm độc quyền, mang đậm không khí lễ hội"),
-        CustomCategory(6, "Hàng mới về", R.drawable.newarrival2, "Khám phá các sản phẩm mới nhất vừa về, làm mới tủ đồ của bạn với những xu hướng mới")
+        CustomCategory(6, "Hàng mới về", R.drawable.newarrival2, "Khám phá Top 10 sản phẩm mới nhất, cập nhật những xu hướng mới cho tủ đồ của bạn")
     )
 
     Column(
@@ -53,7 +53,17 @@ fun CategoryGrid(navController: NavController) {
 @Composable
 fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifier, navController: NavController) {
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .clickable {
+                when (category.name) {
+                    "Khuyến mãi" -> navController.navigate("sale_screen/${category.description}")
+                    "Sản phẩm hot" -> navController.navigate("hot_screen/${category.description}")
+                    "Flash Sale" -> navController.navigate("flash_sale_screen/${category.description}")
+                    "Phụ kiện độc đáo" -> navController.navigate("accessory_screen/${category.description}")
+                    "BST Giáng Sinh" -> navController.navigate("christmas_collection_screen/${category.description}")
+                    "Hàng mới về" -> navController.navigate("new_arrival_screen/${category.description}")
+                }
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -65,20 +75,10 @@ fun CustomCategoryItemView(category: CustomCategory, modifier: Modifier = Modifi
         Text(
             text = category.name,
             fontSize = 14.sp,
-            color = Color.Black,
-            modifier = Modifier.clickable {
-                when (category.name) {
-                    "Khuyến mãi" -> navController.navigate("sale_screen/${category.description}")
-                    "Sản phẩm hot" -> navController.navigate("hot_screen/${category.description}")
-                    "Flash Sale" -> navController.navigate("flash_sale_screen/${category.description}")
-                    "Phụ kiện độc đáo" -> navController.navigate("accessory_screen/${category.description}")
-                    "BST Giáng Sinh" -> navController.navigate("christmas_collection_screen/${category.description}")
-                    "Hàng mới về" -> navController.navigate("new_arrival_screen/${category.description}")
-                }
-            }
+            color = Color.Black
         )
-
     }
 }
+
 
 
