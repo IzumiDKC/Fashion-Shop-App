@@ -113,4 +113,5 @@
 ## Tuần 12: 16/12 – 22/12/2024
 - **Xây dựng API cùng các trang CategoryGrid (2)**
   - CategoryGrid-Accessory: 16/12/2024
+  - CategoryGrid-New-Arrival: 1712/2024
 ---
