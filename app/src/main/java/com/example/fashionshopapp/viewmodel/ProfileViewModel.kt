@@ -1,9 +1,12 @@
 package com.example.fashionshopapp.viewmodel
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,8 +19,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel(private val context: Context) : ViewModel() {
     private val repository = AuthRepository()
+
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("FashionShopPrefs", Context.MODE_PRIVATE)
+
     val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
     var username by mutableStateOf<String?>(null)
@@ -60,6 +67,14 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
+    init {
+        token = sharedPreferences.getString("auth_token", null)
+        userId = sharedPreferences.getString("user_id", null)
+        _isLoggedIn.value = !token.isNullOrEmpty()
+        Log.d("ProfileViewModel", "Token: $token, UserId: $userId")
+    }
+
+
     fun login(username: String, password: String, onLoginResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             repository.login(username, password) { success, token, userId ->
@@ -68,6 +83,14 @@ class ProfileViewModel : ViewModel() {
                     this@ProfileViewModel.token = token
                     this@ProfileViewModel.username = username
                     this@ProfileViewModel.userId = userId
+                    sharedPreferences.edit().apply(){
+                        putString("token", token)
+                        putString("user_id", userId)
+                        apply()
+                    }
+
+                    RetrofitInstance.token = token
+
                     Log.d("Login", userId ?: "No UserId")
                 } else {
                     _isLoggedIn.value = false
@@ -81,7 +104,20 @@ class ProfileViewModel : ViewModel() {
         _isLoggedIn.value = false
         username = null
         token = null
+
+        clearAuthToken()
+
     }
+
+
+    fun clearAuthToken(){
+        sharedPreferences.edit().apply {
+            remove("auth_token")
+            remove("user_id")
+            apply()
+        }
+    }
+
 
     fun register(
         username: String,

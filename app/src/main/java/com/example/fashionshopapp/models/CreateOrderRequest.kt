@@ -4,5 +4,6 @@ data class CreateOrderRequest(
     val userId: String,
     val totalPrice: Double,
     val shippingAddress: String,
-    val notes: String? = null
+    val notes: String? = null,
+    val orderDetails: List<OrderDetailRequest>
 )

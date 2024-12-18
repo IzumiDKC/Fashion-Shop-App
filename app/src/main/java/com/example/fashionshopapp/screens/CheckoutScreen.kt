@@ -1,19 +1,36 @@
 package com.example.fashionshopapp.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fashionshopapp.models.CartItem
+import com.example.fashionshopapp.models.CreateOrderRequest
+import com.example.fashionshopapp.models.OrderDetail
+import com.example.fashionshopapp.models.OrderDetailRequest
+import com.example.fashionshopapp.viewmodel.OrderViewModel
+import com.example.fashionshopapp.viewmodel.ProfileViewModel
+
 
 @Composable
 fun CheckoutScreen(
     totalPrice: Double,
-    onConfirmPayment: (String) -> Unit,
-    onBack: () -> Unit
+    cartItems: List<CartItem>,
+    shippingAddress: String,
+    notes: String?,
+    orderViewModel: OrderViewModel,
+    onConfirmPayment: (CreateOrderRequest) -> Unit,
+    onBack: () -> Unit,
+    userId: String
 ) {
     var selectedPaymentMethod by remember { mutableStateOf<String?>(null) }
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -82,7 +99,27 @@ fun CheckoutScreen(
             text = { Text("Bạn có chắc chắn muốn sử dụng phương thức $method?") },
             confirmButton = {
                 TextButton(onClick = {
-                    onConfirmPayment(method)
+                    if (userId.isNotEmpty()) {
+                        val orderDetails = cartItems.map { cartItem ->
+                            OrderDetailRequest(
+                                productId = cartItem.product.id,
+                                quantity = cartItem.quantity
+                            )
+                        }
+                        val createOrderRequest = CreateOrderRequest(
+                            userId = userId.trim(),
+                            totalPrice = totalPrice,
+                            shippingAddress = shippingAddress,
+                            notes = notes,
+                            orderDetails = orderDetails
+                        )
+
+                        orderViewModel.createOrder(createOrderRequest)
+                        Toast.makeText(context, "Đã xác nhận đơn hàng!", Toast.LENGTH_SHORT).show()
+                        onConfirmPayment(createOrderRequest)
+                    } else {
+                        println("Lỗi: userId không hợp lệ")
+                    }
                     selectedPaymentMethod = null
                 }) {
                     Text("Đồng ý")

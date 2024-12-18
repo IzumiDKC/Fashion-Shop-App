@@ -50,6 +50,9 @@ android {
 }
 
 dependencies {
+
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.0")
+
     // Image
     implementation("androidx.compose.material3:material3:1.1.1")
     implementation("androidx.compose.material:material-icons-extended:1.4.3")
