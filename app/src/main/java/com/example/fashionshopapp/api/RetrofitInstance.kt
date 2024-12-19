@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
-    private const val BASE_URL = "https://1ff6-2402-800-6318-920d-1566-804e-ea8e-69d4.ngrok-free.app/"
+    private const val BASE_URL = "https://5d29-14-187-46-210.ngrok-free.app/"
 
     var token: String? = null
 

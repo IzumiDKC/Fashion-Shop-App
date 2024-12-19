@@ -89,6 +89,8 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
                         apply()
                     }
 
+                    RetrofitInstance.token = token
+
                 } else {
                     _isLoggedIn.value = false
                 }
