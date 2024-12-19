@@ -70,6 +70,9 @@ import com.example.fashionshopapp.screens.RegisterScreen
 import com.example.fashionshopapp.screens.SaleScreen
 import com.example.fashionshopapp.screens.UpdateProfile
 import com.example.fashionshopapp.screens.WeatherScreen
+import com.example.fashionshopapp.viewmodel.OrderViewModel
+import com.example.fashionshopapp.viewmodel.OrderViewModelFactory
+import com.example.fashionshopapp.viewmodel.ProfileViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,8 +138,13 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
-    val profileViewModel: ProfileViewModel = viewModel()
+
+    val context = LocalContext.current
+    val profileViewModel: ProfileViewModel = viewModel(
+        factory = ProfileViewModelFactory(context)
+    )
     val cartViewModel = viewModel<CartViewModel>()
+    val cartItems by cartViewModel.cartItems.collectAsState(emptyList())
 
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) { HomeScreen(cartViewModel, navController) }
@@ -162,14 +170,23 @@ fun NavigationGraph(navController: NavHostController) {
             arguments = listOf(navArgument("totalPrice") { type = NavType.StringType })
         ) { backStackEntry ->
             val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toDoubleOrNull() ?: 0.0
+            val orderViewModel: OrderViewModel = viewModel(factory = OrderViewModelFactory(cartViewModel))
+            val userId = profileViewModel.userId ?:""
+
             CheckoutScreen(
+                userId = userId,
                 totalPrice = totalPrice,
+                cartItems = cartItems,
+                shippingAddress = "TP.HCM",
+                notes = "Co cung duoc",
+                orderViewModel = orderViewModel,
                 onConfirmPayment = { paymentMethod ->
                     println("Phương thức thanh toán: $paymentMethod")
                     navController.popBackStack(Screen.Home.route, false)
                 },
                 onBack = { navController.popBackStack() }
             )
+
         }
         composable("history_order") {
             HistoryOrderScreen()
