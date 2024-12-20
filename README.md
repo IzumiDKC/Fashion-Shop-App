@@ -114,4 +114,7 @@
 - **Xây dựng API cùng các trang CategoryGrid (2)**
   - CategoryGrid-Accessory: 16/12/2024
   - CategoryGrid-New-Arrival: 17/12/2024
+  - Build Order
+    + Create
+    + Fix bug
 ---
