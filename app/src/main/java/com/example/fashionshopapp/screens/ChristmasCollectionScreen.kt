@@ -3,6 +3,7 @@ package com.example.fashionshopapp.screens
 import ProductItem
 import ProductRepository
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -100,7 +101,34 @@ fun ChristmasCollectionScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit
                         product = product,
                         categories = categories,
                         brands = brands,
-                        onAddToCart = onAddToCart
+                        onAddToCart = {
+                            onAddToCart(product)
+                            successMessage = "Đã thêm ${product.name} vào giỏ hàng!"
+                        }
+                    )
+                }
+            }
+
+            if (successMessage != null) {
+                LaunchedEffect(successMessage) {
+                    kotlinx.coroutines.delay(2000)
+                    successMessage = null
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Text(
+                        text = successMessage ?: "",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .background(Color(0xFF4CAF50))
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
             }

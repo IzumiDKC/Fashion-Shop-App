@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
-    private const val BASE_URL = "https://5d29-14-187-46-210.ngrok-free.app/"
+    private const val BASE_URL = "https://b096-2001-ee0-265-19d4-14cd-5d55-f656-f453.ngrok-free.app/"
 
     var token: String? = null
 
@@ -17,7 +17,6 @@ object RetrofitInstance {
         val originalRequest = chain.request()
 
         val newRequest = originalRequest.newBuilder().apply {
-            // Nếu token không null, thêm token vào header Authorization
             token?.let {
                 Log.d("AUTH_INTERCEPTOR", "Adding Authorization header with token: Bearer $it")
                 addHeader("Authorization", "Bearer $it")

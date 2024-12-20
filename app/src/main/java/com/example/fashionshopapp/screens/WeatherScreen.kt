@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.*
@@ -75,8 +76,7 @@ fun LoadingScreen() {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Đang tải dữ liệu thời tiết...",
-                style = MaterialTheme.typography.h6,
-                color = Color.White
+                style = MaterialTheme.typography.h6.copy(color = Color.White, fontWeight = FontWeight.Bold),
             )
         }
     }
@@ -103,7 +103,6 @@ fun WeatherContent(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Vùng thông tin vị trí
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(top = 16.dp)
@@ -125,16 +124,15 @@ fun WeatherContent(
                 )
             }
 
-            // Hiệu ứng thời tiết
             LottieAnimation(
                 composition = rememberLottieComposition(LottieCompositionSpec.RawRes(animationRes)).value,
                 iterations = LottieConstants.IterateForever,
                 modifier = Modifier
                     .size(200.dp)
                     .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 8.dp)
             )
 
-            // Gợi ý thời trang
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,9 +146,11 @@ fun WeatherContent(
                 }
                 Text(
                     text = "💡 Lời khuyên: $suggestion",
-                    style = MaterialTheme.typography.body1.copy(color = Color.White)
+                    style = MaterialTheme.typography.body1.copy(color = Color.White, fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(vertical = 60.dp)
                 )
             }
         }
     }
 }
+

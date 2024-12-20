@@ -177,13 +177,14 @@ fun NavigationGraph(navController: NavHostController) {
                 userId = userId,
                 totalPrice = totalPrice,
                 cartItems = cartItems,
-                shippingAddress = "TP.HCM",
-                notes = "Co cung duoc",
+                shippingAddress = "",
+                notes = "",
                 orderViewModel = orderViewModel,
                 onConfirmPayment = { paymentMethod ->
                     println("Phương thức thanh toán: $paymentMethod")
                     navController.popBackStack(Screen.Home.route, false)
                 },
+                profileViewModel = profileViewModel,
                 onBack = { navController.popBackStack() }
             )
 
