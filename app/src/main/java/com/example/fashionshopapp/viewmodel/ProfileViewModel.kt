@@ -69,6 +69,7 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
     init {
         token = sharedPreferences.getString("auth_token", null)
         userId = sharedPreferences.getString("user_id", null)
+        username = sharedPreferences.getString("username", null)
         _isLoggedIn.value = !token.isNullOrEmpty()
         Log.d("ProfileViewModel", "Token: $token, UserId: $userId")
     }
@@ -84,7 +85,9 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
                     Log.d("Login", userId ?: "No UserId")
 
                     sharedPreferences.edit().apply(){
-                        putString("token", token)
+                   //     putString("token", token)
+                        putString("username", username)
+                        putString("auth_token", token)
                         putString("user_id", userId)
                         apply()
                     }
