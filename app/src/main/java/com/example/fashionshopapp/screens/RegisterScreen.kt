@@ -39,7 +39,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
                 .height(150.dp)
                 .padding(bottom = 32.dp)
         )
-
         TextField(
             value = username,
             onValueChange = { username = it },
@@ -48,7 +47,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
             singleLine = true
         )
         Spacer(modifier = Modifier.height(8.dp))
-
         TextField(
             value = fullName,
             onValueChange = { fullName = it },
@@ -57,7 +55,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
             singleLine = true
         )
         Spacer(modifier = Modifier.height(8.dp))
-
         TextField(
             value = email,
             onValueChange = { email = it },
@@ -66,7 +63,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
             singleLine = true
         )
         Spacer(modifier = Modifier.height(8.dp))
-
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -76,7 +72,6 @@ fun RegisterScreen(viewModel: ProfileViewModel, navController: NavController) {
             singleLine = true
         )
         Spacer(modifier = Modifier.height(16.dp))
-
         Button(
             onClick = {
                 viewModel.register(username, fullName, email, password) { success, errors, loginSuccess ->

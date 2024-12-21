@@ -172,7 +172,6 @@ fun ProductItemChristmas(
                     textDecoration = TextDecoration.LineThrough // Gạch
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                // Giá khuyến mãi
                 Text(
                     text = buildAnnotatedString {
                         append("Sale: ${String.format("%.3f", product.finalPrice)} VND (")
@@ -185,7 +184,6 @@ fun ProductItemChristmas(
                     fontWeight = FontWeight.Bold
                 )
             } else {
-                // ko khuyến mãi
                 Text(
                     text = "Giá: ${String.format("%.3f", product.price)} VND",
                     color = Color.Black,

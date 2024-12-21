@@ -82,7 +82,6 @@ fun HotScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit, description: S
                             Text(text = "Quay lại", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         }
                     }
-
                     Text(
                         text = description,
                         fontSize = 20.sp,
@@ -94,7 +93,6 @@ fun HotScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit, description: S
                             .wrapContentWidth(Alignment.CenterHorizontally)
                     )
                 }
-
                 items(products) { product ->
                     ProductItem(
                         product = product,
@@ -108,13 +106,11 @@ fun HotScreen(onBack: () -> Unit, onAddToCart: (Product) -> Unit, description: S
                 }
             }
 
-
             if (successMessage != null) {
                 LaunchedEffect(successMessage) {
                     kotlinx.coroutines.delay(2000)
                     successMessage = null
                 }
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

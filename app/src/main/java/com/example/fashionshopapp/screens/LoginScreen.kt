@@ -33,7 +33,6 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
-
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -50,7 +49,6 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
-
         Button(
             onClick = {
                 viewModel.login(username, password) { loginSuccess ->
@@ -68,12 +66,10 @@ fun LoginScreen(viewModel: ProfileViewModel, navController: NavController) {
         ) {
             Text("Đăng nhập", color = MaterialTheme.colorScheme.onPrimary)
         }
-
         if (loginError) {
             Text("Đăng nhập thất bại. Vui lòng thử lại!", color = MaterialTheme.colorScheme.error)
         }
         Spacer(modifier = Modifier.height(8.dp))
-
         Text(
             "Nếu chưa có tài khoản, đăng ký tại đây",
             color = MaterialTheme.colorScheme.primary,

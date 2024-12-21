@@ -16,6 +16,7 @@ import com.example.fashionshopapp.ui.theme.FashionShopAppTheme
 import com.example.fashionshopapp.utils.AppBackground
 import com.example.fashionshopapp.utils.BannerCarousel
 import CategoryGrid
+import HistoryOrderScreen
 import ProductScreen
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import android.annotation.SuppressLint
@@ -59,7 +60,6 @@ import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.CheckoutScreen
 import com.example.fashionshopapp.screens.ChristmasCollectionScreen
 import com.example.fashionshopapp.screens.FlashSaleScreen
-import com.example.fashionshopapp.screens.HistoryOrderScreen
 import com.example.fashionshopapp.screens.HotScreen
 import com.example.fashionshopapp.screens.LoginScreen
 import com.example.fashionshopapp.screens.NewArrivalScreen
@@ -190,7 +190,10 @@ fun NavigationGraph(navController: NavHostController) {
 
         }
         composable("history_order") {
-            HistoryOrderScreen()
+            HistoryOrderScreen(
+                profileViewModel = profileViewModel,
+                onBackClick = { navController.popBackStack() }
+            )
         }
         composable("profile_detail") {
             ProfileDetail(viewModel = profileViewModel, navController = navController)

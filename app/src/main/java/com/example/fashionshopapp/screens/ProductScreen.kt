@@ -69,7 +69,6 @@ fun ProductScreen(searchText: String, onAddToCart: (Product) -> Unit) {
                     val filteredProducts = products.filter {
                         it.name.contains(searchText, ignoreCase = true)
                     }
-
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(filteredProducts) { product ->
                             ProductItem(

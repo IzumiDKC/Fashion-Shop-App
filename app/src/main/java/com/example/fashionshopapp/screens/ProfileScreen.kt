@@ -78,7 +78,6 @@ fun ProfileScreen(viewModel: ProfileViewModel, navController: NavController) {
                     title = "Quản lý địa chỉ",
                     description = "Cập nhật hoặc thêm địa chỉ mới.",
                     onClick = {
-                        // TODO: Chuyển sang màn hình quản lý địa chỉ
                     }
                 )
                 ProfileOptionCard(

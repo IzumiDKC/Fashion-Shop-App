@@ -1,34 +1,39 @@
 package com.example.fashionshopapp.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fashionshopapp.api.RetrofitInstance
 import com.example.fashionshopapp.models.Order
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class HistoryOrderViewModel : ViewModel() {
-    var orders by mutableStateOf<List<Order>?>(null)
-    var isLoading by mutableStateOf(false)
-    var errorMessage by mutableStateOf<String?>(null)
+    private val _orders = MutableStateFlow<List<Order>?>(null)
+    val orders: StateFlow<List<Order>?> = _orders
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
 
     fun fetchOrders(userId: String) {
         viewModelScope.launch {
-            isLoading = true
+            _isLoading.value = true
             try {
                 val response = RetrofitInstance.api.getUserOrders(userId)
                 if (response.isSuccessful) {
-                    orders = response.body()
-                    errorMessage = null
+                    _orders.value = response.body()
+                    _errorMessage.value = null
                 } else {
-                    errorMessage = "Không thể tải đơn hàng. Vui lòng thử lại."
+                    _errorMessage.value = "Không thể tải đơn hàng. Vui lòng thử lại."
                 }
             } catch (e: Exception) {
-                errorMessage = "Đã xảy ra lỗi: ${e.message}"
+                _errorMessage.value = "Đã xảy ra lỗi: ${e.message}"
             }
-            isLoading = false
+            _isLoading.value = false
         }
     }
 }
+

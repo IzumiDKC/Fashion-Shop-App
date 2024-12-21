@@ -69,7 +69,6 @@ fun CheckoutScreen(
             )
         }
 
-        // Tổng cộng
         Text(
             text = "Tổng cộng: ${String.format("%.3f", totalPrice)} VND",
             style = MaterialTheme.typography.h6.copy(

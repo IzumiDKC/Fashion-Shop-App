@@ -229,7 +229,6 @@ fun ProductItemForFlashSale(
                     fontWeight = FontWeight.Bold
                 )
             } else {
-                // Không khuyến mãi
                 Text(
                     text = "Giá: ${String.format("%.3f", product.price)} VND",
                     color = Color.Black,
@@ -260,7 +259,6 @@ fun calculateTimeRemaining(endDate: String): String {
     if (duration.isNegative) {
         return "Sale đã kết thúc"
     }
-
     val days = duration.toDays()
     val hours = duration.toHours() % 24
     val minutes = duration.toMinutes() % 60

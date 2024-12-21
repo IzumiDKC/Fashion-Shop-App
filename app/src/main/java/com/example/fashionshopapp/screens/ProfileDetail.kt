@@ -29,7 +29,6 @@ fun ProfileDetail(viewModel: ProfileViewModel, navController: NavController) {
             profileDetail.value = profile
         }
     }
-
     profileDetail.value?.let { profile ->
         Column(
             modifier = Modifier
@@ -46,7 +45,6 @@ fun ProfileDetail(viewModel: ProfileViewModel, navController: NavController) {
                 ),
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
