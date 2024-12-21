@@ -104,10 +104,10 @@
     + Cải thiện truy vấn ở giữa 2 Table Products và Brands tại [đây](https://github.com/IzumiDKC/Fashion-Shop)
 - **Cải thiện code**
 - **Xây dựng API cùng các trang CategoryGrid**
-  - CategoryGrid-Sale: 10/12/2024
-  - CategoryGrid-Hot: 12/12/2024
-  - CategoryGrid-FlashSale: 13/12/2024
-  - CategoryGrid-ChristmasCollection: 14/12/2024
+  - CategoryGrid-Sale + Interface
+  - CategoryGrid-Hot + Interface
+  - CategoryGrid-FlashSale + Interface
+  - CategoryGrid-ChristmasCollection + Interface
 ---
 
 ## Tuần 12: 16/12 – 22/12/2024
@@ -117,4 +117,5 @@
   - Build Order
     + Create
     + Fix bug
+    + OrderHistory + Interface
 ---
