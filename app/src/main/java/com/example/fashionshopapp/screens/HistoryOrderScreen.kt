@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.remember
 import com.example.fashionshopapp.models.Order
 import com.example.fashionshopapp.viewmodel.HistoryOrderViewModel
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
@@ -82,14 +83,27 @@ fun HistoryOrderScreen(
                         )
                     }
                     else -> {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 8.dp),
-                            contentPadding = PaddingValues(bottom = 16.dp)
+                        Column(
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            items(orders) { order ->
-                                OrderItem(order)
+                            /*Text(
+                                text = "Tổng giá trị đơn hàng: ${String.format("%,.0f", totalOrderPrice.toDouble())} VND",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                color = Color(0xFF007BFF),
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )*/
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(horizontal = 8.dp),
+                                contentPadding = PaddingValues(bottom = 16.dp)
+                            ) {
+                                items(orders) { order ->
+                                    OrderItem(order)
+                                }
                             }
                         }
                     }
@@ -111,7 +125,6 @@ fun OrderItem(order: Order) {
         backgroundColor = Color(0xFFF5F5F5)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Row for Order ID and Date
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -138,13 +151,12 @@ fun OrderItem(order: Order) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Row for Total Price and Status
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Tổng tiền: ${order.totalPrice} VND",
+                    text = "Tổng tiền: ${String.format("%,.3f", order.totalPrice)} VND",
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
                     color = Color(0xFF007BFF)

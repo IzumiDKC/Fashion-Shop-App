@@ -62,6 +62,7 @@ import com.example.fashionshopapp.screens.ChristmasCollectionScreen
 import com.example.fashionshopapp.screens.FlashSaleScreen
 import com.example.fashionshopapp.screens.HotScreen
 import com.example.fashionshopapp.screens.LoginScreen
+import com.example.fashionshopapp.screens.MemberRankScreen
 import com.example.fashionshopapp.screens.NewArrivalScreen
 import com.example.fashionshopapp.screens.ProfileDetail
 import com.example.fashionshopapp.viewmodel.CartViewModel
@@ -191,6 +192,12 @@ fun NavigationGraph(navController: NavHostController) {
         }
         composable("history_order") {
             HistoryOrderScreen(
+                profileViewModel = profileViewModel,
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+        composable("member_rank") {
+            MemberRankScreen (
                 profileViewModel = profileViewModel,
                 onBackClick = { navController.popBackStack() }
             )

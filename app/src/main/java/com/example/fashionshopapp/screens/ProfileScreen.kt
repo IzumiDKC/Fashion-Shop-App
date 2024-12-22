@@ -75,9 +75,10 @@ fun ProfileScreen(viewModel: ProfileViewModel, navController: NavController) {
                 )
 
                 ProfileOptionCard(
-                    title = "Quản lý địa chỉ",
-                    description = "Cập nhật hoặc thêm địa chỉ mới.",
+                    title = "Xếp hạng thành viên",
+                    description = "Xem xếp hạng tiêu dùng của bạn.",
                     onClick = {
+                        navController.navigate("member_rank")
                     }
                 )
                 ProfileOptionCard(

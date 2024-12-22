@@ -15,5 +15,5 @@ data class OrderDetail(
     val originalPrice: Double,
     val finalPrice: Double,
     val quantity: Int
-) {
-}
+)
+
