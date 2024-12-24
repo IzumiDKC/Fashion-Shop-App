@@ -32,7 +32,7 @@ import com.example.fashionshopapp.repository.CategoryRepository
 import com.example.fashionshopapp.utils.AppBackground
 
 @Composable
-fun ProductScreen(searchText: String, onAddToCart: (Product) -> Unit) {
+fun ProductScreen(searchText: String, onAddToCart: (Product) -> Unit, filteredProducts: List<Product>) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
     var brands by remember { mutableStateOf<List<Brand>>(emptyList()) }
     var categories by remember { mutableStateOf<List<Category>>(emptyList()) }
@@ -49,6 +49,10 @@ fun ProductScreen(searchText: String, onAddToCart: (Product) -> Unit) {
         brands = brandRepository.fetchBrands()
         categories = categoryRepository.fetchCategories()
         isLoading = false
+    }
+
+    LaunchedEffect(filteredProducts) {
+        products = filteredProducts
     }
 
     AppBackground {

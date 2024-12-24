@@ -17,6 +17,7 @@ import com.example.fashionshopapp.utils.AppBackground
 import com.example.fashionshopapp.utils.BannerCarousel
 import CategoryGrid
 import HistoryOrderScreen
+import ProductRepository
 import ProductScreen
 import com.example.fashionshopapp.viewmodel.ProfileViewModel
 import android.annotation.SuppressLint
@@ -40,6 +41,11 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.rounded.WbSunny
 import android.Manifest
 import android.os.Looper
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.graphics.Color
@@ -55,6 +61,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.fashionshopapp.models.Product
 import com.example.fashionshopapp.screens.AccessoryScreen
 import com.example.fashionshopapp.screens.CartScreen
 import com.example.fashionshopapp.screens.CheckoutScreen
@@ -298,19 +305,59 @@ fun NavigationGraph(navController: NavHostController) {
 fun HomeScreen(cartViewModel: CartViewModel = viewModel(), navController: NavHostController) {
     var searchText by remember { mutableStateOf("") }
 
+    val context = LocalContext.current
+    var products by remember { mutableStateOf<List<Product>>(emptyList()) }
+    var filteredProducts by remember { mutableStateOf<List<Product>>(emptyList()) }
+    val productRepository = ProductRepository()
+    LaunchedEffect(Unit) {
+        Log.d("HomeScreen", "Fetching products in HomeScreen...")
+        products = productRepository.fetchProducts() // Hoặc truyền từ ViewModel
+        filteredProducts = products
+        Log.d("HomeScreen", "Products loaded in HomeScreen: $products")
+    }
+
+    Log.d("HomeScreen", "Products: $products")
+    Log.d("HomeScreen", "Filtered Products: $filteredProducts")
+
+    val productAdapter = remember { ProductAdapter(filteredProducts) }
+    fun updateProductList(filteredProducts: List<Product>){
+        productAdapter.updateData(filteredProducts)
+        Log.d("HomeScreen", "Adapter updated with products: $filteredProducts")
+    }
+
+    val imageActivityLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val labels = result.data?.getStringArrayListExtra("detectedLabels")
+            Log.d("ProductScreen", "Detected labels: $labels")
+            labels?.let {
+                filteredProducts = ImageSearchHelper.searchProductsByLabels(context, products, it) }
+        }else {
+            Log.d("ProductScreen", "ImageActivity canceled or no labels detected")
+        }
+    }
+    LaunchedEffect(filteredProducts) {
+        products = filteredProducts
+        updateProductList(filteredProducts)
+        Log.d("ProductScreen", "Loaded new products: $filteredProducts")
+    }
+
     AppBackground {
         Column(modifier = Modifier.fillMaxSize()) {
             BannerCarousel()
             CategoryGrid(navController = navController)
-            SearchBar(searchText = searchText, onSearchTextChange = { searchText = it })
-            ProductScreen(searchText = searchText, onAddToCart = { product -> cartViewModel.addToCart(product) })
+            SearchBar(searchText = searchText, onSearchTextChange = { searchText = it }, onImageClick = {
+                val intent = Intent(context, ImageActivity::class.java)
+                imageActivityLauncher.launch(intent)})
+            ProductScreen(searchText = searchText, onAddToCart = { product -> cartViewModel.addToCart(product) }, filteredProducts = filteredProducts)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(searchText: String, onSearchTextChange: (String) -> Unit) {
+fun SearchBar(searchText: String, onSearchTextChange: (String) -> Unit, onImageClick:() -> Unit) {
     val context = LocalContext.current
     var isListening by remember { mutableStateOf(false) }
     var recognitionResult by remember { mutableStateOf("") }
@@ -362,27 +409,36 @@ fun SearchBar(searchText: String, onSearchTextChange: (String) -> Unit) {
             )
         },
         trailingIcon = {
-            IconButton(onClick = {
-                requestMicrophonePermission(context) { isGranted ->
-                    if (isGranted) {
-                        recognitionResult = ""
-                        isListening = true
-                        startSpeechRecognition(context, onResult = { result ->
-                            isListening = false
-                            recognitionResult = result
-                            onSearchTextChange(result)
-                        }, onTimeout = {
-                            isListening = false
-                            showError = true
-                        })
-                    }
+            Row {
+                IconButton(onClick = onImageClick) {
+                    Icon(
+                        imageVector = Icons.Default.ImageSearch,
+                        contentDescription = "Image Search",
+                        tint = Color.Gray
+                    )
                 }
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Mic,
-                    contentDescription = "Microphone",
-                    tint = Color.Gray
-                )
+                IconButton(onClick = {
+                    requestMicrophonePermission(context) { isGranted ->
+                        if (isGranted) {
+                            recognitionResult = ""
+                            isListening = true
+                            startSpeechRecognition(context, onResult = { result ->
+                                isListening = false
+                                recognitionResult = result
+                                onSearchTextChange(result)
+                            }, onTimeout = {
+                                isListening = false
+                                showError = true
+                            })
+                        }
+                    }
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Mic,
+                        contentDescription = "Microphone",
+                        tint = Color.Gray
+                    )
+                }
             }
         },
         textStyle = androidx.compose.ui.text.TextStyle(
